@@ -1,0 +1,197 @@
+<?php
+class Admin_kutumb extends CI_Controller {
+ 
+    /**
+    * Responsable for auto load the model
+    * @return void
+    */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('jilla_model');
+        $this->load->model('taluka_model');
+		$this->load->model('gaam_model');
+		$this->load->model('aanganvadi_model');
+		//$this->load->model('kutumb_model');
+    }
+ 
+    /**
+    * Load the main view with all the current model model's data.
+    * @return void
+    */
+    public function index()
+    {
+
+        //all the posts sent by the view
+        $jilla_id = $this->input->post('jilla_id');
+		$taluka_id = $this->input->post('taluka_id');
+		$gaam_id = $this->input->post('gaam_id');
+		
+		$data['jilla_selected'] = 0;
+		$data['taluka_selected'] = 0;
+		$data['gaam_selected'] = 0;
+		$data['aanganvadi_selected'] = 0;
+		//fetch sql data into arrays
+        $data['jilla'] = $this->jilla_model->get_jilla();
+		$data['taluka'] = $this->taluka_model->get_taluka();
+		$data['gaam'] = $this->gaam_model->get_gaam();
+			
+		$data['count_aanganvadi']= 0;
+        $data['aanganvadi'] = array();        
+	
+
+        //load the view
+        $data['main_content'] = 'admin/kutumb/list';
+        $this->load->view('includes/template', $data);  
+
+    }//index
+	public function addkutumb()
+    {
+        //if save button was clicked, get the data sent via post
+        if ($this->input->server('REQUEST_METHOD') === 'POST')
+        {
+
+            //form validation
+            $this->form_validation->set_rules('jilla_id', 'jilla_id', 'required');
+			$this->form_validation->set_rules('taluka_id', 'taluka_id', 'required');
+			$this->form_validation->set_rules('gaam_id', 'gaam_id', 'required');
+			$this->form_validation->set_rules('aanganvadi_name', 'aanganvadi_name', 'required');
+            $this->form_validation->set_rules('aanganvadi_number', 'aanganvadi_number', 'required|numeric');
+            $this->form_validation->set_rules('place', 'place', 'required');
+            $this->form_validation->set_rules('address', 'address', 'required');
+            $this->form_validation->set_rules('karyakar_name', 'karyakar_name', 'required');
+			$this->form_validation->set_rules('karyakar_number', 'karyakar_number', 'required');
+			$this->form_validation->set_rules('tedagara_name', 'tedagara_name', 'required');
+			$this->form_validation->set_rules('tedagara_number', 'tedagara_number', 'required');
+			$this->form_validation->set_rules('password', 'password', 'required');
+			
+            $this->form_validation->set_error_delimiters('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>', '</strong></div>');
+
+            //if the form has passed through the validation
+            if ($this->form_validation->run())
+            {
+                $data_to_store = array(
+                    'jilla_id' => $this->input->post('jilla_id'),
+					'taluka_id' => $this->input->post('taluka_id'),
+					'gaam_id' => $this->input->post('gaam_id'),
+					'aanganvadi_name' => $this->input->post('aanganvadi_name'),
+                    'aanganvadi_number' => $this->input->post('aanganvadi_number'),
+                    'place' => $this->input->post('place'),
+                    'address' => $this->input->post('address'),          
+                    'karyakar_name' => $this->input->post('karyakar_name'),
+					'karyakar_number' => $this->input->post('karyakar_number'),          
+					'tedagara_name' => $this->input->post('tedagara_name'),          
+					'tedagara_number' => $this->input->post('tedagara_number'),
+					'password' => $this->input->post('password')       
+                );
+                //if the insert has returned true then we show the flash message
+                if($this->aanganvadi_model->store_aanganvadi($data_to_store)){
+                    $data['flash_message'] = TRUE; 
+                }else{
+                    $data['flash_message'] = FALSE; 
+                }
+
+            }
+
+        }
+						
+        //fetch jilla data to populate the select field
+        $data['jilla'] = $this->jilla_model->get_jilla();
+		//fetch taluka data to populate the select field
+        $data['taluka'] = array();//$this->taluka_model->get_taluka();
+		//fetch gaam data to populate the select field
+        $data['gaam'] = array();//$this->gaam_model->get_gaam();
+		$data['aanganvadi_id'] = $_REQUEST['id'];
+
+        //load the view
+        $data['main_content'] = 'admin/kutumb/add';
+        $this->load->view('includes/template', $data);  
+    }       
+
+    /**
+    * Update item by his id
+    * @return void
+    */
+	/*
+    public function update()
+    {
+        //aanganvadi id 
+        $id = $this->uri->segment(3);
+  
+        //if save button was clicked, get the data sent via post
+        if ($this->input->server('REQUEST_METHOD') === 'POST')
+        {
+           //form validation
+            $this->form_validation->set_rules('jilla_id', 'jilla_id', 'required');
+			$this->form_validation->set_rules('taluka_id', 'taluka_id', 'required');
+			$this->form_validation->set_rules('gaam_id', 'gaam_id', 'required');
+			$this->form_validation->set_rules('aanganvadi_name', 'aanganvadi_name', 'required');
+            $this->form_validation->set_rules('aanganvadi_number', 'aanganvadi_number', 'required|numeric');
+            $this->form_validation->set_rules('place', 'place', 'required');
+            $this->form_validation->set_rules('address', 'address', 'required');
+            $this->form_validation->set_rules('karyakar_name', 'karyakar_name', 'required');
+			$this->form_validation->set_rules('karyakar_number', 'karyakar_number', 'required');
+			$this->form_validation->set_rules('tedagara_name', 'tedagara_name', 'required');
+			$this->form_validation->set_rules('tedagara_number', 'tedagara_number', 'required');
+			
+            $this->form_validation->set_error_delimiters('<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><strong>', '</strong></div>');
+            //if the form has passed through the validation
+            if ($this->form_validation->run())
+            {
+    
+                $data_to_store = array(
+                    'jilla_id' => $this->input->post('jilla_id'),
+					'taluka_id' => $this->input->post('taluka_id'),
+					'gaam_id' => $this->input->post('gaam_id'),
+					'aanganvadi_name' => $this->input->post('aanganvadi_name'),
+                    'aanganvadi_number' => $this->input->post('aanganvadi_number'),
+                    'place' => $this->input->post('place'),
+                    'address' => $this->input->post('address'),          
+                    'karyakar_name' => $this->input->post('karyakar_name'),
+					'karyakar_number' => $this->input->post('karyakar_number'),          
+					'tedagara_name' => $this->input->post('tedagara_name'),          
+					'tedagara_number' => $this->input->post('tedagara_number')          
+                );
+                //if the insert has returned true then we show the flash message
+                if($this->aanganvadi_model->update_aanganvadi($id, $data_to_store) == TRUE){
+                    $this->session->set_flashdata('flash_message', 'updated');
+                }else{
+                    $this->session->set_flashdata('flash_message', 'not_updated');
+                }
+                redirect('aanganvadi/update/'.$id.'');
+
+            }//validation run
+
+        }
+
+        //if we are updating, and the data did not pass trough the validation
+        //the code below wel reload the current data
+
+        //aanganvadi data 
+        $data['aanganvadi'] = $this->aanganvadi_model->get_aanganvadi_by_id($id);
+         //fetch jilla data to populate the select field
+        $data['jilla'] = $this->jilla_model->get_jilla();
+		//fetch taluka data to populate the select field
+        $data['taluka'] = $this->taluka_model->get_taluka();
+		//fetch gaam data to populate the select field
+        $data['gaam'] = $this->gaam_model->get_gaam();
+        //load the view
+        $data['main_content'] = 'admin/aanganvadi/edit';
+        $this->load->view('includes/template', $data);            
+
+    }//update
+*/
+    /**
+    * Delete aanganvadi by his id
+    * @return void
+    */
+	/*
+    public function delete()
+    {
+        //aanganvadi id 
+        $id = $this->uri->segment(3);
+        $this->aanganvadi_model->delete_aanganvadi($id);
+        redirect('aanganvadi');
+    }//edit
+*/
+}

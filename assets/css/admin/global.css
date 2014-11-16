@@ -1,0 +1,55 @@
+@import url(bootstrap.css);
+@import url(admin.css);
+.navbar-fixed-top .navbar-inner {
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
+    padding: 10px 0;
+}
+.header_logo_name {
+    text-align: center;
+}
+
+.left_logo {
+    float: left;
+    width: 100px;
+}
+
+.middle_header {
+    float: left;
+    margin: 0 10px;
+    width: 79%;
+}
+.right_logo {
+    float: right;
+    width: 75px;
+}
+.navbar-inner{
+	background:none;
+}
+.clear {
+    clear: both;
+}
+.navbar-fixed-top{
+	 position: inherit;
+}
+.navbar .nav  {
+    background: none repeat scroll 0 0 #2c569e;
+    width: 100%;
+	 border-radius: 5px;
+}
+.navbar .nav > li > a{
+	color:#fff;
+	font-size: medium;
+    font-weight: bold;
+}
+.form-signin{
+	 max-width: 610px;
+}
+.login-left {
+    float: left;
+    margin-right: 50px;
+    width: 280px;
+}
+.login-right {
+    float: left;
+    width: 280px;
+}
