@@ -23,13 +23,26 @@ class Admin_kutumb extends CI_Controller {
     */
     public function index()
     {
-
+		//$perPage = $this->uri->segment(4);
+		//echo $perPage;
+		//if($perPage=='')
+		//{
+			$perPage = 20;
+		//}
+		
         //all the posts sent by the view
         $jilla_id = $this->input->post('jilla_id');
 		$taluka_id = $this->input->post('taluka_id');
 		$gaam_id = $this->input->post('gaam_id');
 		$aanganwadiid_id = $this->input->post('aanganvadi_id');
 		$searchtxt = $this->input->post('searchtxt');
+		$perpagePost = $this->input->post('perpage');
+		if($perpagePost != '')
+		{
+			$perPage = $perpagePost;
+		}
+		$data['perpage'] = $perPage;
+		$currentpagePost = $this->input->post('currentpage');
 		$data['searchtxt']=$searchtxt;
 		
 		$data['jilla_selected'] = 0;
@@ -49,7 +62,7 @@ class Admin_kutumb extends CI_Controller {
         $order_type = $this->input->post('order_type'); 
 
         //pagination settings
-        $config['per_page'] = 20;
+        $config['per_page'] = $perPage;
         $config['base_url'] = base_url().'kutumb/page';
         $config['use_page_numbers'] = TRUE;
         $config['num_links'] = 20;
@@ -62,13 +75,18 @@ class Admin_kutumb extends CI_Controller {
 
         //limit end
         $page = $this->uri->segment(3);
-
+		if($currentpagePost != '')
+		{
+			$page = $currentpagePost;
+		}
         //math to get the initial record to be select in the database
         $limit_end = ($page * $config['per_page']) - $config['per_page'];
         if ($limit_end < 0){
             $limit_end = 0;
+			$page=1;
         } 
-
+		
+		$data['currentpage'] = $page;
         //if order type was changed
         if($order_type){
             $filter_session_data['order_type'] = $order_type;

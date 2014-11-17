@@ -69,7 +69,7 @@ class Attendance_model extends CI_Model {
 		{
 			$this->db->where($this->table_name.'.aanganvadi_id', $this->session->userdata('user_id'));
 		}
-		else if($aanganvadi_id != null)
+		else if($aanganvadi_id != null && $aanganvadi_id != 0)
 		{
 			$this->db->where($this->table_name.'.aanganvadi_id',$aanganvadi_id);
 		}
@@ -117,7 +117,7 @@ class Attendance_model extends CI_Model {
 		{
 			$this->db->where($this->table_name.'.aanganvadi_id', $this->session->userdata('user_id'));
 		}
-		else if($aanganvadi_id != null)
+		else if($aanganvadi_id != null && $aanganvadi_id != 0)
 		{
 			$this->db->where($this->table_name.'.aanganvadi_id',$aanganvadi_id);
 		}

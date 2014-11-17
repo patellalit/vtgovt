@@ -20,17 +20,25 @@ class Admin_aanganvadi extends CI_Controller {
     */
     public function index()
     {
-
-		$perPage = $this->uri->segment(4);
-		if($perPage=='')
-		{
-			$perPage = 1;
-		}
+		
+		//$perPage = $this->uri->segment(4);
+		//echo $perPage;
+		//if($perPage=='')
+		//{
+			$perPage = 20;
+		//}
 		$data['perpage'] = $perPage;
         //all the posts sent by the view
         $jilla_id = $this->input->post('jilla_id');
 		$taluka_id = $this->input->post('taluka_id');
 		$gaam_id = $this->input->post('gaam_id');
+		$perpagePost = $this->input->post('perpage');
+		if($perpagePost != '')
+		{
+			$perPage = $perpagePost;
+		}
+		$data['perpage'] = $perPage;
+		$currentpagePost = $this->input->post('currentpage');
 		
         $search_string = $this->input->post('search_string');        
         $order = $this->input->post('order'); 
@@ -52,13 +60,17 @@ class Admin_aanganvadi extends CI_Controller {
 
         //limit end
         $page = $this->uri->segment(3);
-		
+		if($currentpagePost != '')
+		{
+			$page = $currentpagePost;
+		}
         //math to get the initial record to be select in the database
         $limit_end = ($page * $config['per_page']) - $config['per_page'];
         if ($limit_end < 0){
             $limit_end = 0;
 			$page=1;
         } 
+		
 		$data['currentpage'] = $page;
         //if order type was changed
         if($order_type){

@@ -91,40 +91,18 @@ class Kutumb_model extends CI_Model {
 			$this->db->from($this->person_table_name);
 			$stringarray=explode(' ',$search_string);
 			$this->db->where("(first_name like '%".$search_string."%' or middle_name like '%".$search_string."%' or last_name like '%".$search_string."%' or CONCAT_WS(' ', first_name, middle_name, last_name) like '%".$search_string."%')");
-			
-			/*echo $search_string;
-			print_r($stringarray);
-			$where='(';
-			for($i=0;$i<count($stringarray);$i++)
+			$query = $this->db->get();
+			$resultarray = $query->result_array(); 	
+			for($i=0;$i<count($resultarray);$i++)
 			{
-				if($where == ')')
-					$where .=' or ';
-				$where.=" first_name like '".$stringarray[$i]."' or middle_name like '".$stringarray[$i]."' or last_name like '".$stringarray[$i]."' ";
-			}
-			if($where !='(')
-			{
-				$where .= ')';
-				//$this->db->where("(first_name like '%".$search_string."%' or middle_name like '%".$search_string."%' or last_name like '%".$search_string."%')");
-				$this->db->where($where);*/
-				$query = $this->db->get();
-				$resultarray = $query->result_array(); 	
-				//print_r($resultarray);
-				//echo '<pre>';
-				//print_r($this->db->last_query());
-				//echo '</pre>';
-				for($i=0;$i<count($resultarray);$i++)
-				{
-					$familyidarray[] = $resultarray[$i]['family_id'];
-				}
-			//}
-			
+				$familyidarray[] = $resultarray[$i]['family_id'];
+			}			
 		}
 		$this->db->select($this->table_name.'.*');
 		$this->db->select('(select first_name from '.$this->person_table_name.' where family_id='.$this->table_name.'.family_id and relation_with_main_person=2 order by family_person_id asc limit 1) as first_name');
 		$this->db->select('(select middle_name from '.$this->person_table_name.' where family_id='.$this->table_name.'.family_id and relation_with_main_person=2 order by family_person_id asc limit 1) as middle_name');
 		$this->db->select('(select last_name from '.$this->person_table_name.' where family_id='.$this->table_name.'.family_id and relation_with_main_person=2 order by family_person_id asc limit 1) as last_name');
 		$this->db->select('aanganvadi.aanganvadi_name as aanganvadi_name');
-		//$this->db->select('gaam.name_guj as gaam_name');
 		$this->db->from($this->table_name);
 		//aanganvadi
 		if($aanganwadiid_id != null && $aanganwadiid_id != 0){
@@ -204,6 +182,11 @@ class Kutumb_model extends CI_Model {
 		    $this->db->order_by('family_id', 'Asc');
 		}
 		
+		//aanganvadi
+		if($aanganwadiid_id != null && $aanganwadiid_id != 0){
+			$this->db->where('anganwadi_id', $aanganwadiid_id);
+		}
+
 		if($this->session->userdata('is_admin')==false)
 		{
 			$this->db->where($this->table_name.'.anganwadi_id', $this->session->userdata('user_id'));

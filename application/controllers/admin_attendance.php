@@ -24,12 +24,20 @@ class Admin_attendance extends CI_Controller {
     */
     public function index()
     {
-
+		$perPage = 20;
         //all the posts sent by the view
         $jilla_id = $this->input->post('jilla_id');
 		$taluka_id = $this->input->post('taluka_id');
 		$gaam_id = $this->input->post('gaam_id');
 		$aanganwadiid_id = $this->input->post('aanganvadi_id');
+		$perpagePost = $this->input->post('perpage');
+		if($perpagePost != '')
+		{
+			$perPage = $perpagePost;
+		}
+		$data['perpage'] = $perPage;
+		$currentpagePost = $this->input->post('currentpage');
+		
 		$date = $this->input->post('date');
 		if($date != '')
 		{
@@ -59,7 +67,7 @@ class Admin_attendance extends CI_Controller {
         $order_type = $this->input->post('order_type'); 
 
         //pagination settings
-        $config['per_page'] = 20;
+        $config['per_page'] = $perPage;
         $config['base_url'] = base_url().'attendance/page';
         $config['use_page_numbers'] = TRUE;
         $config['num_links'] = 20;
@@ -70,15 +78,22 @@ class Admin_attendance extends CI_Controller {
         $config['cur_tag_open'] = '<li class="active"><a>';
         $config['cur_tag_close'] = '</a></li>';
 
+
         //limit end
         $page = $this->uri->segment(3);
-
+		if($currentpagePost != '')
+		{
+			$page = $currentpagePost;
+		}
         //math to get the initial record to be select in the database
         $limit_end = ($page * $config['per_page']) - $config['per_page'];
         if ($limit_end < 0){
             $limit_end = 0;
+			$page=1;
         } 
-
+		
+		$data['currentpage'] = $page;
+		//$config['uri_segment'] = $page;
         //if order type was changed
         if($order_type){
             $filter_session_data['order_type'] = $order_type;
@@ -149,7 +164,7 @@ class Admin_attendance extends CI_Controller {
 				$data['gaam_selected']=0;
 			}
 				
-			if($aanganwadiid_id != '' || $aanganwadiid_id != 0)
+			if($aanganwadiid_id != '' && $aanganwadiid_id != 0)
 				$data['aanganwadiid_selected'] = $aanganwadiid_id;
 			else
 				$data['aanganwadiid_selected'] = 0;
