@@ -13,7 +13,7 @@
 		  	if($this->session->userdata('is_admin')==true)
 			{
 		  ?>
-          		<a  href="<?php echo site_url("").$this->uri->segment(1); ?>/add" class="btn btn-success">Add a new</a>
+          		<a  href="<?php echo site_url("").$this->uri->segment(1); ?>/add" class="btn btn-success">નવી આંગણવાડી ઉમેરો</a>
 			<?php
 			}
 			?>
@@ -26,7 +26,7 @@
            
             <?php
            
-            $attributes = array('class' => 'form-inline reset-margin', 'id' => 'myform');
+            $attributes = array('class' => 'form-inline reset-margin', 'id' => 'myform','method'=>"GET");
            
             $options_jilla = array(0 => "all");
             foreach ($jilla as $row)
@@ -75,7 +75,11 @@ echo '&nbsp;';
 
               //$options_order_type = array('Asc' => 'Asc', 'Desc' => 'Desc');
               //echo form_dropdown('order_type', $options_order_type, $order_type_selected, 'class="span1"');
-
+			  ?>
+			  &nbsp;&nbsp;<input type="text" id="search" name="search" value="<?php echo $search ?>" />
+<input type="hidden" id="perpage" name="perpage" value="<?php echo $perpage ?>" />
+			  <input type="hidden" id="currentpage" name="currentpage" value="<?php echo $currentpage ?>" />
+			  <?php
               echo form_submit($data_submit);
 
             echo form_close();
@@ -119,10 +123,10 @@ echo '&nbsp;';
 				echo '<td>'.$row['taluka_name'].'</td>';
 				echo '<td>'.$row['gaam_name'].'</td>';
                 echo '<td class="crud-actions">';
-                echo '<a href="'.site_url("").'aanganvadi/update/'.$row['id'].'" class="btn btn-info">view & edit</a>'; 
+                echo '<a href="'.site_url("").'aanganvadi/update/'.$row['id'].'" class="btn btn-info">View & Edit</a>'; 
 				if($this->session->userdata('is_admin')==true)
 				{ 
-                	echo '<a href="javascript:void(0)" onclick="if(confirm(\'Are you sure you want to delete this aanganwadi?\')){document.location.href=\''.site_url("").'aanganvadi/delete/'.$row['id'].'\'}" class="btn btn-danger">delete</a>';
+                	echo '<a href="javascript:void(0)" onclick="if(confirm(\'Are you sure you want to delete this aanganwadi?\')){document.location.href=\''.site_url("").'aanganvadi/delete/'.$row['id'].'\'}" class="btn btn-danger">Delete</a>';
 				}
                 echo '</td>';
                 echo '</tr>';
@@ -131,20 +135,27 @@ echo '&nbsp;';
             </tbody>
           </table>
 			
-          <?php echo '<div class="pagination"><div class="pagingLeft"><select style="width:100px" id="rowsperpage" name="rowsperpage" onchange="changePaging()"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div><div class="pagingCenter"><input type"text" id="gotopage" name="gotopage" value="'.$currentpage.'" style="width:100px" onKeyPress="return changePage(event,this);" /></div><div class="pagingRight">'.$this->pagination->create_links().'</div><div style="clear:both"></div></div>'; ?>
+          <?php echo '<div class="pagination"><div class="pagingLeft"><select style="width:100px" id="rowsperpage" name="rowsperpage" onchange="changePaging()"><option value="20">20</option><option value="50">50</option><option value="75">75</option><option value="100">100</option></select></div><div class="pagingCenter"><input type"text" id="gotopage" name="gotopage" value="'.$currentpage.'" style="width:100px" onKeyPress="return changePage(event,this);" /></div><div class="pagingRight">'.$this->pagination->create_links().'</div><div style="clear:both"></div></div>'; ?>
 
       </div>
     </div>
+	<script src="<?php echo base_url(); ?>assets/js/jquery-1.7.1.min.js"></script>
 	<script type="text/javascript">
+		var $ = jQuery.noConflict();
 		$(document).ready(function(){
-			$('#rowsperpage').val('<?php $perpage ?>');
+
+			$('#rowsperpage').val('<?php echo $perpage ?>');
 		}
 		);
 		function changePage(e,textbox)
 		{
 			var code = (e.keyCode ? e.keyCode : e.which);
 			if(code == 13 && document.getElementById('gotopage').value!='') { //Enter keycode
-			 	document.location.href='<?php echo base_url('aanganvadi/page') ?>/'+document.getElementById('gotopage').value+'/'+document.getElementById('rowsperpage').value;
+			 	//document.location.href='<?php echo base_url('aanganvadi/page') ?>/'+document.getElementById('gotopage').value+'/'+document.getElementById('rowsperpage').value;
+				$('#perpage').val($('#rowsperpage').val());
+				$('#currentpage').val($('#gotopage').val());
+				$("#myform").attr("action", '<?php echo base_url('aanganvadi/page') ?>/'+document.getElementById('gotopage').value);
+				$('#myform').submit();
 			}
 			else
 			{
@@ -158,7 +169,11 @@ echo '&nbsp;';
 		}
 		function changePaging()
 		{
-			document.location.href='<?php echo base_url('aanganvadi/page/'.$currentpage) ?>/'+document.getElementById('rowsperpage').value;			
+			//document.location.href='<?php echo base_url('aanganvadi/page/'.$currentpage) ?>/'+document.getElementById('rowsperpage').value;			
+			$('#perpage').val($('#rowsperpage').val());
+					$('#currentpage').val($('#gotopage').val());
+					$("#myform").attr("action", '<?php echo base_url('aanganvadi/page') ?>/'+document.getElementById('gotopage').value);
+					$('#myform').submit();
 		}
 		
 	</script>

@@ -14,6 +14,12 @@
 		$2( "#txtDeathDate" ).datepicker({maxDate: '0',yearRange: "-100:+0",dateFormat: 'dd/mm/yy',});
 		$2( "#txtOutSthadantrarDate" ).datepicker({maxDate: '0',yearRange: "-100:+0",dateFormat: 'dd/mm/yy',});
 		$2( "#txtsthantarDate" ).datepicker({maxDate: '0',yearRange: "-100:+0",dateFormat: 'dd/mm/yy',});
+		
+		$2( "#nondhani_date" ).datepicker({maxDate: '0',yearRange: "-100:+0",dateFormat: 'dd/mm/yy',});
+		$2( "#k_nondhani_date" ).datepicker({maxDate: '0',yearRange: "-100:+0",dateFormat: 'dd/mm/yy',});
+		$2( "#lmp_date" ).datepicker({maxDate: '0',yearRange: "-100:+0",dateFormat: 'dd/mm/yy',});
+		$2( "#miscarage_date" ).datepicker({maxDate: '0',yearRange: "-100:+0",dateFormat: 'dd/mm/yy',});
+		
 		$2('#txtBirthDate').datepicker( {
 		changeMonth: true,
 		changeYear: true,
@@ -59,6 +65,28 @@
 			}
 			$2('#txtYear').val(allYears);
 			$2('#txtMonth').val(partialMonths);
+			if((parseInt(allYears) < 6) || (parseInt(allYears) == 6 || parseInt(partialMonths) == 0))
+			{
+				
+				html ='<select id="txtmothername" class="popuptxt" name="txtmothername" ><option value=""></option>';
+				for(var i =0;i<Object.keys(allMemberArray).length ; i++)
+				{
+					//alert(parseInt(allMemberArray[i]['txtYear'])+' '+allMemberArray[i]['drpGender']);
+					if(parseInt(allMemberArray[i]['txtYear']) >= 14 && allMemberArray[i]['drpGender'] == '3')
+					{
+						//alert("hihello");
+						html += '<option value="'+allMemberArray[i]['txtfname']+' '+allMemberArray[i]['txtmname']+' '+allMemberArray[i]['txtlname']+'">'+allMemberArray[i]['txtfname']+' '+allMemberArray[i]['txtmname']+' '+allMemberArray[i]['txtlname']+'</option>';					
+					}
+				}
+				html += '</select>';
+				document.getElementById('mothernamediv').innerHTML = html;
+			}
+			else
+			{
+				html ='<select id="txtmothername" class="popuptxt" name="txtmothername" ><option value=""></option>';
+				html += '</select>';
+				document.getElementById('mothernamediv').innerHTML = html;
+			}
 			//alert(partialMonths+' months and -- '+allYears);
 //			alert(JSON.stringify(inst));
 		}		
@@ -203,54 +231,25 @@ var $= jQuery.noConflict();
 			$dhrm = array('-','બુદ્ધ','ખ્રિસ્તી','હિંદુ','ઇસ્લામ','જૈન','શીખ','અન્ય');
 			$sthl = array('-','શેરી','વાસ','ફળીયું','વોર્ડ');
 			$laghu = array('-','હા','ના');
-//		  $this->output->clear_all_cache();
+
 		  echo '<div class="main_container_width">';
 			  echo '<div class="control-group sub_parts_div">';
-				echo '<label for="jilla_id" class="control-label form_label_css">કુટુંબનો ક્રમ નંબરો</label>';
-				//echo '<div class="controls">';
+				echo '<label for="jilla_id" class="control-label form_label_css">કુટુંબનો ક્રમ નંબરો <span style="color:#ff0000">*</span></label>';
 				  echo '<input type="text" id="kutumb_krm_no" name="kutumb_krm_no" value="'.$familydata[0]['family_rank'].'" style="width:223px" >';
-	
-				//echo '</div>';
 			  echo '</div>';
           ?>
           
           <?php
 			  echo '<div class="control-group sub_parts_div">';
-				echo '<label for="taluka_id" class="control-label form_label_css">જાતિ</label>';
-				//echo '<div class="controls">';
+				echo '<label for="taluka_id" class="control-label form_label_css">જાતિ <span style="color:#ff0000">*</span></label>';
 				echo form_dropdown('jati', $options_castArray, $familydata[0]['jati_id'], 'class="span2 width230" id="jati"');
-				/*
-				  echo '<select class="span2 width230" id="jati" name="jati">';
-				  	echo '<option value="0">--પસંદ કરો--</option>';
-					for($i=1;$i<count($jati);$i++){
-						$selected='';
-						if($familydata[0]['jati_id'] == $i)
-							$selected='selected="selected"';
-						echo '<option '.$selected.' value="'.$i.'">'.$jati[$i].'</option>';
-					}					
-				echo '</select>';
-	*/
-				//echo '</div>';
 			  echo '</div>';
           ?>
           
           <?php
 			  echo '<div class="control-group sub_parts_div">';
-				echo '<label for="gaam_id" class="control-label form_label_css">ધર્મ</label>';
-				//echo '<div class="controls">';
+				echo '<label for="gaam_id" class="control-label form_label_css">ધર્મ <span style="color:#ff0000">*</span></label>';
 				echo form_dropdown('dharm', $options_religionArray,$familydata[0]['dharm_id'], 'class="span2 width230" id="dharm"');
-				/*
-				  echo '<select class="span2 width230" id="dharm" name="dharm">';
-				  	echo '<option value="0">--પસંદ કરો--</option>';
-					for($i=1;$i<count($dhrm);$i++){
-						$selected='';
-						if($familydata[0]['dharm_id'] == $i)
-							$selected='selected="selected"';
-						echo '<option '.$selected.' value="'.$i.'">'.$dhrm[$i].'</option>';
-					}					
-				echo '</select>';
-	*/
-				//echo '</div>';
 			  echo '</div>';
 		  	echo '<div class="classclear"></div>';
 		  echo '</div>';
@@ -258,23 +257,9 @@ var $= jQuery.noConflict();
           
           <div  class="main_container_width">
 			  <div class="control-group sub_parts_div">
-				<label for="inputError" class="control-label form_label_css" >સ્થળ</label>
+				<label for="inputError" class="control-label form_label_css" >સ્થળ <span style="color:#ff0000">*</span></label>
 				<div class="controls marginleft0">
 				<?php echo form_dropdown('sthal', $options_placeArray , $familydata[0]['sthal_id'], 'class="span2 width230" id="sthal"');
-				/*
-				
-				  <select class="span width223" id="sthal" name="sthal">
-				  	<option value="0">--પસંદ કરો--</option>
-					<?php
-					for($i=1;$i<count($sthl);$i++){
-						$selected='';
-						if($familydata[0]['sthal_id'] == $i)
-							$selected='selected="selected"';
-						echo '<option '.$selected.' value="'.$i.'">'.$sthl[$i].'</option>';
-					}	
-					?>
-				</select>
-				*/
 				 ?>
 				</div>
 			  </div>
@@ -285,7 +270,7 @@ var $= jQuery.noConflict();
 				</div>
 			  </div>          
 			  <div class="control-group sub_parts_div">
-				<label for="inputError" class="control-label form_label_css">રાજ્યમાં લઘુમતી છે.</label>
+				<label for="inputError" class="control-label form_label_css">રાજ્યમાં લઘુમતી છે. <span style="color:#ff0000">*</span></label>
 				<div class="controls marginleft0">
 				  <select class="span width223" id="isLagumati" name="isLagumati">
 				  	<option value="0">--પસંદ કરો--</option>
@@ -300,6 +285,12 @@ var $= jQuery.noConflict();
 				</select>
 				</div>
 			  </div>
+			  <div class="control-group sub_parts_div">
+				<label for="inputError" class="control-label form_label_css">નોંધણી <span style="color:#ff0000">*</span></label>
+				<div class="controls marginleft0">
+				  <input type="text" class="width223" id="k_nondhani_date" name="k_nondhani_date" value="<?php echo $familydata[0]['nondhani_date'] ?>"/>
+				</div>
+			  </div>
 			  <div class="classclear"></div>
 		  </div>
 		  <div style="clear:both;padding-top:10px;">&nbsp;</div>  
@@ -310,38 +301,41 @@ var $= jQuery.noConflict();
 						<th class="red header">કુટુંબમાં વ્યક્તિનો ક્રમ નંબર</th>
 						<th class="red header">કુટુંબના સભ્યોના નામ</th>
 						<th class="red header">યુ.આઈ.ડી. / આધાર નંબર</th>
+						<th class="red header">જન્મ તારીખ</th>
+						<th class="red header">જાતિ</th>
+						<th class="red header">લક્ષ્યાંક કોડ</th>
+						<th class="red header">ખોડખાંપણ</th>
+						<th class="red header">આંગણવાડીની સેવાઓ</th>
 						<th class="red header">&nbsp;</th>
 					</tr>
 				</thead>
 
 			<?php
-			/*echo "<pre>";
-			print_r($familydata[0]['persondata']);
-			echo "</pre>";*/
 			?>
 			<script>
 			var arrayindex=0;
 			</script>
 			<?php
+                //echo "<pre>";print_r($familydata[0]['persondata']);
 				for($i =0;$i<count($familydata[0]['persondata']) ; $i++)
 				{
-					if($familydata[0]['persondata'][$i]['birth_date'] != '0000-00-00 00:00:00')
+					if($familydata[0]['persondata'][$i]['birth_date'] != '0000-00-00')
 						$familydata[0]['persondata'][$i]['birth_date'] = date('d/m/Y',strtotime($familydata[0]['persondata'][$i]['birth_date']));
 					else 
 						$familydata[0]['persondata'][$i]['birth_date'] = '';
 						
 					
-					if($familydata[0]['persondata'][$i]['gam_shift_date'] != '0000-00-00 00:00:00')
+					if($familydata[0]['persondata'][$i]['gam_shift_date'] != '0000-00-00')
 						$familydata[0]['persondata'][$i]['gam_shift_date'] = date('d/m/Y',strtotime($familydata[0]['persondata'][$i]['gam_shift_date']));
 					else 
 						$familydata[0]['persondata'][$i]['gam_shift_date'] = '';
 						
-					if($familydata[0]['persondata'][$i]['gam_out_shift_date'] != '0000-00-00 00:00:00')
+					if($familydata[0]['persondata'][$i]['gam_out_shift_date'] != '0000-00-00')
 						$familydata[0]['persondata'][$i]['gam_out_shift_date'] = date('d/m/Y',strtotime($familydata[0]['persondata'][$i]['gam_out_shift_date']));
 					else 
 						$familydata[0]['persondata'][$i]['gam_out_shift_date'] = '';
 						
-					if($familydata[0]['persondata'][$i]['die_date'] != '0000-00-00 00:00:00')
+					if($familydata[0]['persondata'][$i]['die_date'] != '0000-00-00')
 						$familydata[0]['persondata'][$i]['die_date'] = date('d/m/Y',strtotime($familydata[0]['persondata'][$i]['die_date']));
 					else 
 						$familydata[0]['persondata'][$i]['die_date'] = '';
@@ -350,12 +344,35 @@ var $= jQuery.noConflict();
 					echo '<tr><td class="red header">'.$familydata[0]['persondata'][$i]['person_rank'].'</td>';
 					echo '<td class="red header">'.$familydata[0]['persondata'][$i]['first_name'].' '.$familydata[0]['persondata'][$i]['middle_name'].' '.$familydata[0]['persondata'][$i]['last_name'].'</td>';
 					echo '<td class="red header">'.$familydata[0]['persondata'][$i]['uid_aadharnumber'].'</td>';
-					echo '<td class="red header"><a href="javascript:void(0)" onclick="mode=\'edit\'; filldata('.$i.');">Edit</a></td></tr>';
+					echo '<td class="red header">'.$familydata[0]['persondata'][$i]['birth_date'].'</td>';
+					echo '<td class="red header">'.$options_genderArray[$familydata[0]['persondata'][$i]['gender']].'</td>';
+					echo '<td class="red header">'.$options_targetCodeArray[$familydata[0]['persondata'][$i]['lakshyank_code']].'</td>';
+					echo '<td class="red header">'.$options_malformationTypeArray[$familydata[0]['persondata'][$i]['khodkhapan_type']].'</td>';
+					$str='';
+					if($familydata[0]['persondata'][$i]['purak_aahar'] == '1')
+						$str .= 'પૂરક આહાર';
+					if($familydata[0]['persondata'][$i]['purv_prathmik_shikshan'] == '1')
+					{
+						if($str != '')
+							$str .= ',';
+						$str .= 'પૂર્વ પ્રાથમિક શિક્ષણ';
+					}
+					echo '<td class="red header">'.$str.'</td>';
+					if($familydata[0]['persondata'][$i]['gender']==3 && (($familydata[0]['persondata'][$i]['ageIn_year'] ==0 &&  $familydata[0]['persondata'][$i]['ageIn_month'] > 6) || $familydata[0]['persondata'][$i]['ageIn_year'] > 0))
+					{
+						echo '<td class="red header"><a href="javascript:void(0)" onclick="mode=\'edit\'; filldata('.$i.',0);">Edit</a> &nbsp; <a href="javascript:void(0)" onclick="mode=\'edit\'; filldata('.$i.',1);">Edit sagrbha detail</a></td></tr>';
+					}
+					else
+					{
+						echo '<td class="red header"><a href="javascript:void(0)" onclick="mode=\'edit\'; filldata('.$i.',0);">Edit</a></td></tr>';
+					}
 
 					?>
 					<script>
 					
 					allMemberArray[arrayindex] = {};	
+					allMemberArray[arrayindex]['family_person_id'] = '<?php echo $familydata[0]['persondata'][$i]['family_person_id'] ?>';
+					allMemberArray[arrayindex]['edit_type'] = '0';
 					allMemberArray[arrayindex]['txtaadhar'] = '<?php echo $familydata[0]['persondata'][$i]['uid_aadharnumber'] ?>';
 					allMemberArray[arrayindex]['txtfname'] = '<?php echo $familydata[0]['persondata'][$i]['first_name'] ?>';
 					allMemberArray[arrayindex]['txtPersonNumber'] = '<?php echo $familydata[0]['persondata'][$i]['person_rank'] ?>';
@@ -371,13 +388,28 @@ var $= jQuery.noConflict();
 					allMemberArray[arrayindex]['drplakshyank'] = '<?php echo $familydata[0]['persondata'][$i]['lakshyank_code'] ?>';
 					allMemberArray[arrayindex]['drpKhodkhapan'] = '<?php echo $familydata[0]['persondata'][$i]['khodkhapan_type'] ?>';
 					allMemberArray[arrayindex]['txtsthantarDate'] = '<?php echo $familydata[0]['persondata'][$i]['gam_shift_date'] ?>';
-					allMemberArray[arrayindex]['txtOutSthadantrarDate'] = '<?php echo $familydata[0]['persondata'][$i]['gam_out_shift_date'] ?>';
+console.log('allMemberArray '+allMemberArray[arrayindex]['family_person_id']+'-<?php echo $familydata[0]['persondata'][$i]['gam_shift_date'] ?> -'+allMemberArray[arrayindex]['txtsthantarDate']);
+allMemberArray[arrayindex]['txtOutSthadantrarDate'] = '<?php echo $familydata[0]['persondata'][$i]['gam_out_shift_date'] ?>';
 					allMemberArray[arrayindex]['txtDeathDate'] = '<?php echo $familydata[0]['persondata'][$i]['die_date'] ?>';		
 					allMemberArray[arrayindex]['chkpurakAahar'] = '<?php echo $familydata[0]['persondata'][$i]['purak_aahar'] ?>';
 					allMemberArray[arrayindex]['chkPrathmikEducation'] = '<?php echo $familydata[0]['persondata'][$i]['purv_prathmik_shikshan'] ?>';
 					allMemberArray[arrayindex]['rdoRehvasi'] = '<?php echo $familydata[0]['persondata'][$i]['anganwadi_kendra_vistar_rehvasi'] ?>';
 					
-					arrayindex++;	
+					allMemberArray[arrayindex]['drpGenderText'] = '<?php echo $options_genderArray[$familydata[0]['persondata'][$i]['gender']] ?>';
+					allMemberArray[arrayindex]['drplakshyankText'] = '<?php echo $options_targetCodeArray[$familydata[0]['persondata'][$i]['lakshyank_code']] ?>';
+					allMemberArray[arrayindex]['drpKhodkhapanText'] = '<?php echo $options_malformationTypeArray[$familydata[0]['persondata'][$i]['khodkhapan_type']] ?>';
+					
+					
+					allMemberArray[arrayindex]['janm_samay'] = '<?php echo $familydata[0]['persondata'][$i]['janm_samay'] ?>';
+					allMemberArray[arrayindex]['janm_sthal'] = '<?php echo $familydata[0]['persondata'][$i]['janm_sthal'] ?>';
+					allMemberArray[arrayindex]['janm_samaye_thayel_vajan_kilogram'] = '<?php echo $familydata[0]['persondata'][$i]['janm_samaye_thayel_vajan_kilogram'] ?>';
+					allMemberArray[arrayindex]['janm_amaye_thayel_vajan_grams'] = '<?php echo $familydata[0]['persondata'][$i]['janm_amaye_thayel_vajan_grams'] ?>';
+					allMemberArray[arrayindex]['dilevery_type'] = '<?php echo $familydata[0]['persondata'][$i]['dilevery_type'] ?>';
+					allMemberArray[arrayindex]['nondhani_date'] = '<?php echo $familydata[0]['persondata'][$i]['nondhani_date'] ?>';
+					allMemberArray[arrayindex]['lmp_date'] = '<?php echo $familydata[0]['persondata'][$i]['lmp_date'] ?>';
+					allMemberArray[arrayindex]['miscarage_date'] = '<?php echo $familydata[0]['persondata'][$i]['miscarage_date'] ?>';
+
+					arrayindex++;
 		</script>	
 		
 		<?php
@@ -391,7 +423,11 @@ var $= jQuery.noConflict();
 		</div>
 		  
           <div class="form-actions submitdiv">
-		  <a  class="fancybox btn btn-primary" href="#addkutumbSabhyaDiv" onclick="cleardata();">કુટુંબ વ્યક્તિ ઉમેરો</a><a class="fancybox" id="openfancy" href="#addkutumbSabhyaDiv"></a>
+		  <a  class="fancybox btn btn-primary" href="#addkutumbSabhyaDiv" onclick="cleardropdown();cleardata();addmember();">કુટુંબમા નવો સભ્ય ઉમેરો</a><a class="fancybox" id="openfancy" href="#addkutumbSabhyaDiv"></a>
+		  <a class="fancybox btn btn-primary" href="#addkutumbSabhyaDiv" onclick="cleardropdown();cleardata();navjatshishu();">
+નવજાત શિશુ ઉમેરો</a>
+			<a class="fancybox btn btn-primary" href="#addkutumbSabhyaDiv" onclick="cleardropdown();cleardata();sagrbha();">
+સગર્ભા સ્ત્રી ઉમેરો</a>
 		  <br /><br />
             <button class="btn btn-primary" onclick="if(Object.keys(allMemberArray).length == 0){ alert('Please add at least one family member'); return; }; checkvalidation('<?php echo base_url().'kutumb/checkvalidation'; ?>');" type="button">સેવ કરો</button> 
           </div>
@@ -432,64 +468,16 @@ var $= jQuery.noConflict();
             				<td>
 				                કુટુંબના વડા સાથેનો સબંધ<br>
 								<?php echo form_dropdown('drpRelation', $options_relationArray , '1', 'class="popuptxt" id="drpRelation"'); ?>
-								<!--
-								<select class="popuptxt" id="drpRelation" name="drpRelation" >
-									<option value="0">--પસંદ કરો--</option>
-									<option value="1">પોતે</option>
-									<option value="2">પત્નિ</option>
-									<option value="3">પતિ</option>
-									<option value="4">પુત્ર</option>
-									<option value="5">પુત્રી</option>
-									<option value="6">પુત્રવધૂ</option>
-									<option value="7">પૌત્ર</option>
-									<option value="8">પૌત્રવધુ</option>
-									<option value="9">પ્રપૌત્ર</option>
-									<option value="10">પ્રપૌત્રવધુ</option>
-									<option value="11">પ્રપૌત્રી</option>
-									<option value="12">જમાઈ</option>
-									<option value="13">ભાણેજ</option>
-									<option value="14">ભાણજી</option>
-									<option value="15">દોહિત્ર</option>
-									<option value="16">દોહિત્રી</option>
-									<option value="17">દતક પુત્ર</option>
-									<option value="18">દતક પુત્રી</option>
-									<option value="19">અનાથ</option>									
-									<option value="20">પૌત્રી</option>
-									<option value="21">ભાઈ</option>
-									<option value="22">ભાભી</option>
-									<option value="23">બહેન</option>
-									<option value="24">ભત્રીજી</option>
-									<option value="25">ભત્રીજા</option>
-								</select>
-								-->
 				            </td>
 				        </tr>
 				        <tr>
 				            <td>
 				                જાતિ (પુરૂષ/સ્ત્રી)<br>
 								<?php echo form_dropdown('drpGender', $options_genderArray, '1', 'class="popuptxt" id="drpGender"'); ?>
-								<!--
-                				<select class="popuptxt" id="drpGender" name="drpGender">
-									<option value="0">--પસંદ કરો--</option>
-									<option value="1">પુરૂષ</option>
-									<option value="2">સ્ત્રી</option>
-									<option value="3">ટ્રાન્સજેન્ડર</option>
-								</select>
-								-->
 				            </td>
 				            <td>
 				                હાલનો વૈવાહિક દરજ્જો<br>
 								<?php echo form_dropdown('drpdarjo', $options_maritalStatusArray, '1', 'class="popuptxt" id="drpdarjo"'); ?>
-								<!--
-                				<select class="popuptxt" id="drpdarjo" name="drpdarjo">
-									<option value="0">--પસંદ કરો--</option>
-									<option value="1">પરિણીત</option>
-									<option value="2">અપરિણીત</option>
-									<option value="3">વિધુર</option>
-									<option value="3">વિધવા</option>
-									<option value="3">ત્યકતા</option>
-								</select>
-								-->
 				            </td>
 				            <td>
 				                જન્મ તારીખ<br>
@@ -514,34 +502,16 @@ var $= jQuery.noConflict();
 				        <tr>
 				            <td style="width: 20%;">
 				                માતાનું નામ (0-6 વર્ષના બાળકો માટે)<br>
-                				<input type="text" class="popuptxt" id="txtmothername" name="txtmothername">
+                				<!-- <input type="text" class="popuptxt" id="txtmothername" name="txtmothername"> -->
+								<div id="mothernamediv"><select id="txtmothername" class="popuptxt" name="txtmothername" ></select></div>
 				            </td>
 				            <td style="width: 20%;">
 				                લક્ષ્યાંક કોડ<br>
 								<?php echo form_dropdown('drplakshyank', $options_targetCodeArray, '1', 'class="popuptxt" id="drplakshyank"'); ?>
-								<!--
-                				<select class="popuptxt" id="drplakshyank" name="drplakshyank">
-									<option value="0">લાગુ નથી</option>
-									<option value="P">P- સગર્ભા</option>
-									<option value="L">L- ધાત્રી</option>
-									<option value="C">C- બાળક</option>
-									<option value="A">A- કિશોરી</option>
-								</select>
-								-->
 				            </td>
 				            <td style="width: 20%;">
 				                ખોડખાંપણ નો પ્રકાર જો હોય તો<br>
 								<?php echo form_dropdown('drpKhodkhapan', $options_malformationTypeArray, '1', 'class="popuptxt" id="drpKhodkhapan"'); ?>
-								<!--
-                				<select class="popuptxt" id="drpKhodkhapan" name="drpKhodkhapan">
-									<option value="0">કોઈ ખોડખાંપણ નથી</option>
-									<option value="1">હલનચલન</option>
-									<option value="2">માનસિક</option>
-									<option value="3">અંધાપો</option>
-									<option value="4">બહેરાશ</option>
-									<option value="5">મૂંગાપણું</option>
-								</select>
-								-->
 							</td>
 							<td style="width: 20%;">
 								આંગણવાડી કેન્દ્ર વિસ્તારના રહેવાસી છે?<br>
@@ -570,6 +540,52 @@ var $= jQuery.noConflict();
 						<td>
 						</td>
         			</tr>
+					<tr id="navjatshishuTr1">
+						<td>
+							જન્મ સમય
+							<input class="popuptxt" type="text" id="janm_samay" name="janm_samay" value="" />
+						</td>
+						<td>
+							જન્મ સ્થળ
+							<input class="popuptxt" type="text" id="janm_sthal" name="janm_sthal" value="" />
+						</td>
+						<td>
+							ડિલીવરી પ્રકાર
+							<select id="dilevery_type" name="dilevery_type">
+								<option value="">પસંદ કરો</option>
+								<option value="Kudarati">કુદરતી</option>
+								<option value="Sigerian">sigerian</option>
+							</select>
+						</td>
+					</tr>
+					<tr id="navjatshishuTr2">
+						<td>
+							જન્મ સમયે કિલોગ્રામ વજન
+							<input class="popuptxt" type="text" id="janm_samaye_thayel_vajan_kilogram" name="janm_samaye_thayel_vajan_kilogram" value="" />
+						</td>
+						<td>
+							જન્મ સમયે ગ્રામ વજન
+							<input class="popuptxt" type="text" id="janm_amaye_thayel_vajan_grams" name="janm_amaye_thayel_vajan_grams" value="" />
+						</td>
+						
+					</tr>
+					<tr id="sagrbhaTr1">
+						<td>
+							LMP તારીખ
+							<input class="popuptxt" type="text" id="lmp_date" name="lmp_date" value="" />
+						</td>
+						<td>
+							કસુવાવડ તારીખ
+							<input class="popuptxt" type="text" id="miscarage_date" name="miscarage_date" value="" />
+						</td>
+						
+					</tr>
+					<tr>
+						<td>
+							નોંધણી તારીખ
+							<input class="popuptxt" type="text" id="nondhani_date" name="nondhani_date" />
+						</td>
+					</tr>
         			<tr>
 						<td colspan="2">
 							<input type="button" class="butan" id="btnSubmit" onclick="return SetDataIntoArray();" value="સબમિટ" name="btnSubmit">
@@ -590,6 +606,41 @@ var $= jQuery.noConflict();
 
     </div>
      <script>
+	 function navjatshishu()
+	 {
+	 	$ = jQuery.noConflict();
+	 	$('#navjatshishuTr1').css('display','table-row');
+		$('#navjatshishuTr2').css('display','table-row');
+		$('#sagrbhaTr1').css('display','none');
+		
+		html ='<select id="txtmothername" class="popuptxt" name="txtmothername" ><option value=""></option>';
+				for(var i =0;i<Object.keys(allMemberArray).length ; i++)
+				{
+					//alert(parseInt(allMemberArray[i]['txtYear'])+' '+allMemberArray[i]['drpGender']);
+					if(parseInt(allMemberArray[i]['txtYear']) >= 14 && allMemberArray[i]['drpGender'] == '3')
+					{
+						//alert("hihello");
+						html += '<option value="'+allMemberArray[i]['txtfname']+' '+allMemberArray[i]['txtmname']+' '+allMemberArray[i]['txtlname']+'">'+allMemberArray[i]['txtfname']+' '+allMemberArray[i]['txtmname']+' '+allMemberArray[i]['txtlname']+'</option>';					
+					}
+				}
+				html += '</select>';
+				document.getElementById('mothernamediv').innerHTML = html;
+	 }
+	 function sagrbha()
+	 {
+	 	$ = jQuery.noConflict();
+	 	$('#navjatshishuTr1').css('display','none');
+		$('#navjatshishuTr2').css('display','none');
+		$('#sagrbhaTr1').css('display','table-row');
+	 }
+	  function addmember()
+	 {	 
+	 	$ = jQuery.noConflict();
+
+	 	$('#navjatshishuTr1').css('display','none');
+		$('#navjatshishuTr2').css('display','none');
+		$('#sagrbhaTr1').css('display','none');
+	 }
 	 function checkvalidation(url){
 	 	$ = jQuery.noConflict();
 		var str='';
@@ -622,6 +673,10 @@ var $= jQuery.noConflict();
 			   }
 		});
 	}
+	function cleardropdown()
+	{
+		document.getElementById('mothernamediv').innerHTML = '<select id="txtmothername" class="popuptxt" name="txtmothername" ></select>';
+	}
 	function cleardata()
 	 {
 	 	//if(mode=="add")
@@ -648,6 +703,16 @@ var $= jQuery.noConflict();
 		$('#chkPrathmikEducation').prop('checked',false);
 		$('#rdoRehvasiYes').prop('checked',false);
 		$('#rdoRehvasiNo').prop('checked',false);
+		
+		document.getElementById('janm_samay').value='';
+		document.getElementById('janm_sthal').value='';
+		document.getElementById('janm_samaye_thayel_vajan_kilogram').value='';
+		document.getElementById('janm_amaye_thayel_vajan_grams').value='';
+		document.getElementById('dilevery_type').value='';
+		document.getElementById('nondhani_date').value='';
+		
+		document.getElementById('lmp_date').value='';
+		document.getElementById('miscarage_date').value='';
 		}
 	 }
 	 function closepopup()
@@ -659,9 +724,68 @@ var $= jQuery.noConflict();
 	 }
 	 function SetDataIntoArray()
 	 {
+	 	var $= jQuery.noConflict();
+		if(document.getElementById('txtfname').value == '')
+		{
+			alert("Please enter first name");
+			return;
+		}
+		if(document.getElementById('txtmname').value == '')
+		{
+			alert("Please enter middle name");
+			return;
+		}
+		if(document.getElementById('txtlname').value == '')
+		{
+			alert("Please enter last name");
+			return;
+		}
+		if(document.getElementById('drpGender').value == '')
+		{
+			alert("Please select gender");
+			return;
+		}
+		if(document.getElementById('txtBirthDate').value == '')
+		{
+			alert("Please select birth date");
+			return;
+		}
+	 	if(document.getElementById('nondhani_date').value == '')
+		{
+			alert("Please enter nondhani date");
+			return;
+		}
+		if(document.getElementById('miscarage_date').value != '' && document.getElementById('lmp_date').value == '') 
+		{
+			alert("Please enter lmp date");
+			return;
+		}
+		if(((parseInt(document.getElementById('txtMonth').value) > 6 && parseInt(document.getElementById('txtYear').value) == 0) || parseInt(document.getElementById('txtYear').value) > 1) && $('#navjatshishuTr1').is(':visible')) 
+		{
+			alert("Register it as member");
+			return;
+		}
+		if(parseInt(document.getElementById('txtMonth').value) <= 6 && parseInt(document.getElementById('txtYear').value) == 0 && !$('#navjatshishuTr1').is(':visible')) 
+		{
+			alert("Register it as navjat shishu");
+			return;
+		}
+		if($('#navjatshishuTr1').is(':visible') && document.getElementById('txtmothername').value == '')
+		{
+			alert("Please select mother name");
+			return;
+		}
+		
+		
 	 	if(mode == "add")
 		{
+			var $= jQuery.noConflict();
+			
+			
+			
 			allMemberArray[currentindex] = {};	
+			allMemberArray[currentindex]['family_person_id'] = '0';
+			allMemberArray[currentindex]['edit_type'] = '1';
 			allMemberArray[currentindex]['txtaadhar'] = document.getElementById('txtaadhar').value;
 			allMemberArray[currentindex]['txtfname'] = document.getElementById('txtfname').value;
 			allMemberArray[currentindex]['txtPersonNumber'] = document.getElementById('txtPersonNumber').value;
@@ -680,7 +804,21 @@ var $= jQuery.noConflict();
 			allMemberArray[currentindex]['txtOutSthadantrarDate'] = document.getElementById('txtOutSthadantrarDate').value;
 			allMemberArray[currentindex]['txtDeathDate'] = document.getElementById('txtDeathDate').value;		
 			
-			var $= jQuery.noConflict();
+			
+			allMemberArray[currentindex]['drpGenderText'] = $("#drpGender option:selected").text();
+			allMemberArray[currentindex]['drplakshyankText'] = $("#drplakshyank option:selected").text();
+			allMemberArray[currentindex]['drpKhodkhapanText'] = $("#drpKhodkhapan option:selected").text();
+			
+			allMemberArray[currentindex]['janm_samay'] = document.getElementById('janm_samay').value;
+			allMemberArray[currentindex]['janm_sthal'] = document.getElementById('janm_sthal').value;
+			allMemberArray[currentindex]['janm_samaye_thayel_vajan_kilogram'] = document.getElementById('janm_samaye_thayel_vajan_kilogram').value;
+			allMemberArray[currentindex]['janm_amaye_thayel_vajan_grams'] = document.getElementById('janm_amaye_thayel_vajan_grams').value;
+			allMemberArray[currentindex]['dilevery_type'] = document.getElementById('dilevery_type').value;
+			allMemberArray[currentindex]['nondhani_date'] = document.getElementById('nondhani_date').value;
+			
+			allMemberArray[currentindex]['lmp_date'] = document.getElementById('lmp_date').value;
+			allMemberArray[currentindex]['miscarage_date'] = document.getElementById('miscarage_date').value;
+
 			if($('#chkpurakAahar').is(':checked'))		
 			{
 				allMemberArray[currentindex]['chkpurakAahar'] = '1';
@@ -707,26 +845,35 @@ var $= jQuery.noConflict();
 			}
 			
 			currentindex++;		
-			//alert(Object.keys(allMemberArray).length);
-			//alert(JSON.stringify(allMemberArray));
-			/*html='<div><div class="popupdatadiv">કુટુંબમાં વ્યક્તિનો ક્રમ નંબર</div><div class="popupdatadiv">કુટુંબના સભ્યોના નામ</div><div class="popupdatadiv"> યુ.આઈ.ડી. / આધાર નંબર</div><div style="clear:both"></div></div><div>';
-			for(var i =0;i<Object.keys(allMemberArray).length ; i++)
-			{
-				html += '<div class="popupdatadiv">'+allMemberArray[i]['txtPersonNumber']+'</div>';
-				html += '<div class="popupdatadiv">'+allMemberArray[i]['txtfname']+'</div>';
-				html += '<div class="popupdatadiv">'+allMemberArray[i]['txtaadhar']+'</div>';
-				html += '<div class="popupdatadiv"><a href="javascript:void(0)" onclick="mode=\'edit\'; filldata('+i+');">Edit</a></div>';
-				html += '<div style="clear:both"></div>';
-			}
-			html += '</div>';*/
-			
-			html='<table class="table table-striped table-bordered table-condensed"><thead><tr><th class="red header">કુટુંબમાં વ્યક્તિનો ક્રમ નંબર</th><th class="red header">કુટુંબના સભ્યોના નામ</th><th class="red header">યુ.આઈ.ડી. / આધાર નંબર</th></tr></thead>';
+						
+			html='<table class="table table-striped table-bordered table-condensed"><thead><tr><th class="red header">કુટુંબમાં વ્યક્તિનો ક્રમ નંબર</th><th class="red header">કુટુંબના સભ્યોના નામ</th><th class="red header">યુ.આઈ.ડી. / આધાર નંબર</th><th class="red header">જન્મ તારીખ</th><th class="red header">જાતિ</th><th class="red header">લક્ષ્યાંક કોડ</th><th class="red header">ખોડખાંપણ</th><th class="red header">આંગણવાડીની સેવાઓ</th><th class="red header">&nbsp;</th></tr></thead>';
 			for(var i =0;i<Object.keys(allMemberArray).length ; i++)
 			{
 				html += '<tr><td class="red header">'+allMemberArray[i]['txtPersonNumber']+'</td>';
-				html += '<th class="red header">'+allMemberArray[i]['txtfname']+' '+allMemberArray[i]['txtmname']+' '+allMemberArray[i]['txtlname']+'</td>';
-				html += '<th class="red header">'+allMemberArray[i]['txtaadhar']+'</td>';
-				html += '<th class="red header"><a href="javascript:void(0)" onclick="mode=\'edit\'; filldata('+i+');">Edit</a></td></tr>';
+				html += '<td class="red header">'+allMemberArray[i]['txtfname']+' '+allMemberArray[i]['txtmname']+' '+allMemberArray[i]['txtlname']+'</td>';
+				html += '<td class="red header">'+allMemberArray[i]['txtaadhar']+'</td>';
+				html += '<td class="red header">'+allMemberArray[i]['txtBirthDate']+'</td>';
+				html += '<td class="red header">'+allMemberArray[i]['drpGenderText']+'</td>';
+				html += '<td class="red header">'+allMemberArray[i]['drplakshyankText']+'</td>';
+				html += '<td class="red header">'+allMemberArray[i]['drpKhodkhapanText']+'</td>';
+				var str='';
+				if(allMemberArray[i]['chkpurakAahar'] == '1')
+					str += 'પૂરક આહાર';
+				if(allMemberArray[i]['chkPrathmikEducation'] == '1')
+				{
+					if(str != '')
+						str += ','
+					str += 'પૂર્વ પ્રાથમિક શિક્ષણ';
+				}
+				html += '<td class="red header">'+str+'</td>';
+				if(allMemberArray[i]['drpGender']==3 && ((parseInt(allMemberArray[i]['txtYear']) ==0 &&  parseInt(allMemberArray[i]['txtMonth']) > 6) || parseInt(allMemberArray[i]['txtYear']) > 0))
+				{
+					html += '<td class="red header"><a href="javascript:void(0)" onclick="mode=\'edit\'; filldata('+i+',0);">Edit</a>&nbsp;<a href="javascript:void(0)" onclick="mode=\'edit\'; filldata('+i+',1);">Edit sagrbha detail</a></td></tr>';
+				}
+				else
+				{
+					html += '<td class="red header"><a href="javascript:void(0)" onclick="mode=\'edit\'; filldata('+i+',0);">Edit</a></td></tr>';
+				}
 				
 			}
 			html += '</table>';
@@ -760,6 +907,16 @@ var $= jQuery.noConflict();
 			$('#rdoRehvasiYes').prop('checked',false);
 			$('#rdoRehvasiNo').prop('checked',false);
 			
+			document.getElementById('janm_samay').value='';
+		document.getElementById('janm_sthal').value='';
+		document.getElementById('janm_samaye_thayel_vajan_kilogram').value='';
+		document.getElementById('janm_amaye_thayel_vajan_grams').value='';
+		document.getElementById('dilevery_type').value='';
+		document.getElementById('nondhani_date').value='';
+		
+		document.getElementById('lmp_date').value='';
+		document.getElementById('miscarage_date').value='';
+			
 			document.getElementById('familypersoninfo').value = JSON.stringify(allMemberArray);
 			
 
@@ -767,8 +924,12 @@ var $= jQuery.noConflict();
 		}
 		else
 		{
-//		alert('edit');
+			var $= jQuery.noConflict();
+			var family_person_id = allMemberArray[currenteditindex]['family_person_id'];
+		//alert(JSON.stringify(allMemberArray[currenteditindex]));
 			allMemberArray[currenteditindex] = {};	
+			allMemberArray[currenteditindex]['family_person_id'] = family_person_id;
+			allMemberArray[currenteditindex]['edit_type'] = '2';
 			allMemberArray[currenteditindex]['txtaadhar'] = document.getElementById('txtaadhar').value;
 			allMemberArray[currenteditindex]['txtfname'] = document.getElementById('txtfname').value;
 			allMemberArray[currenteditindex]['txtPersonNumber'] = document.getElementById('txtPersonNumber').value;
@@ -787,7 +948,21 @@ var $= jQuery.noConflict();
 			allMemberArray[currenteditindex]['txtOutSthadantrarDate'] = document.getElementById('txtOutSthadantrarDate').value;
 			allMemberArray[currenteditindex]['txtDeathDate'] = document.getElementById('txtDeathDate').value;	
 			
-			var $= jQuery.noConflict();
+			allMemberArray[currenteditindex]['drpGenderText'] = $("#drpGender option:selected").text();
+			allMemberArray[currenteditindex]['drplakshyankText'] = $("#drplakshyank option:selected").text();
+			allMemberArray[currenteditindex]['drpKhodkhapanText'] = $("#drpKhodkhapan option:selected").text();
+			
+			allMemberArray[currenteditindex]['janm_samay'] = document.getElementById('janm_samay').value;
+			allMemberArray[currenteditindex]['janm_sthal'] = document.getElementById('janm_sthal').value;
+			allMemberArray[currenteditindex]['janm_samaye_thayel_vajan_kilogram'] = document.getElementById('janm_samaye_thayel_vajan_kilogram').value;
+			allMemberArray[currenteditindex]['janm_amaye_thayel_vajan_grams'] = document.getElementById('janm_amaye_thayel_vajan_grams').value;
+			allMemberArray[currenteditindex]['dilevery_type'] = document.getElementById('dilevery_type').value;
+			allMemberArray[currenteditindex]['nondhani_date'] = document.getElementById('nondhani_date').value;
+			
+			allMemberArray[currenteditindex]['lmp_date'] = document.getElementById('lmp_date').value;
+			allMemberArray[currenteditindex]['miscarage_date'] = document.getElementById('miscarage_date').value;
+			
+			
 			if($('#chkpurakAahar').is(':checked'))		
 			{
 				allMemberArray[currenteditindex]['chkpurakAahar'] = '1';
@@ -814,28 +989,36 @@ var $= jQuery.noConflict();
 			}
 				
 			currenteditindex++;		
-			//alert(Object.keys(allMemberArray).length);
-//			alert(JSON.stringify(allMemberArray));
-/*
-			html='<div><div class="popupdatadiv">કુટુંબમાં વ્યક્તિનો ક્રમ નંબર</div><div class="popupdatadiv">કુટુંબના સભ્યોના નામ</div><div class="popupdatadiv"> યુ.આઈ.ડી. / આધાર નંબર</div><div style="clear:both"></div></div><div>';
-			for(var i =0;i<Object.keys(allMemberArray).length ; i++)
-			{
-				html += '<div class="popupdatadiv">'+allMemberArray[i]['txtPersonNumber']+'</div>';
-				html += '<div class="popupdatadiv">'+allMemberArray[i]['txtfname']+'</div>';
-				html += '<div class="popupdatadiv">'+allMemberArray[i]['txtaadhar']+'</div>';
-
-				html += '<div class="popupdatadiv"><a href="javascript:void(0)" onclick="mode=\'edit\'; filldata('+i+');">Edit</a></div>';
-				html += '<div style="clear:both"></div>';
-			}
-			html += '</div>';*/
-			
-			html='<table class="table table-striped table-bordered table-condensed"><thead><tr><th class="red header">કુટુંબમાં વ્યક્તિનો ક્રમ નંબર</th><th class="red header">કુટુંબના સભ્યોના નામ</th><th class="red header">યુ.આઈ.ડી. / આધાર નંબર</th></tr></thead>';
+			html='<table class="table table-striped table-bordered table-condensed"><thead><tr><th class="red header">કુટુંબમાં વ્યક્તિનો ક્રમ નંબર</th><th class="red header">કુટુંબના સભ્યોના નામ</th><th class="red header">યુ.આઈ.ડી. / આધાર નંબર</th><th class="red header">જન્મ તારીખ</th><th class="red header">જાતિ</th><th class="red header">લક્ષ્યાંક કોડ</th><th class="red header">ખોડખાંપણ</th><th class="red header">આંગણવાડીની સેવાઓ</th><th>&nbsp;</th></tr></thead>';
 			for(var i =0;i<Object.keys(allMemberArray).length ; i++)
 			{
 				html += '<tr><td class="red header">'+allMemberArray[i]['txtPersonNumber']+'</td>';
-				html += '<th class="red header">'+allMemberArray[i]['txtfname']+' '+allMemberArray[i]['txtmname']+' '+allMemberArray[i]['txtlname']+'</td>';
-				html += '<th class="red header">'+allMemberArray[i]['txtaadhar']+'</td>';
-				html += '<th class="red header"><a href="javascript:void(0)" onclick="mode=\'edit\'; filldata('+i+');">Edit</a></td></tr>';
+				html += '<td class="red header">'+allMemberArray[i]['txtfname']+' '+allMemberArray[i]['txtmname']+' '+allMemberArray[i]['txtlname']+'</td>';
+				html += '<td class="red header">'+allMemberArray[i]['txtaadhar']+'</td>';
+				html += '<td class="red header">'+allMemberArray[i]['txtBirthDate']+'</td>';
+				html += '<td class="red header">'+allMemberArray[i]['drpGenderText']+'</td>';
+				html += '<td class="red header">'+allMemberArray[i]['drplakshyankText']+'</td>';
+				html += '<td class="red header">'+allMemberArray[i]['drpKhodkhapanText']+'</td>';
+				
+				var str='';
+				if(allMemberArray[i]['chkpurakAahar'] == '1')
+					str += 'પૂરક આહાર';
+				if(allMemberArray[i]['chkPrathmikEducation'] == '1')
+				{
+					if(str != '')
+						str += ','
+					str += 'પૂર્વ પ્રાથમિક શિક્ષણ';
+				}
+				html += '<td class="red header">'+str+'</td>';
+				
+				if(allMemberArray[i]['drpGender']==3 && ((parseInt(allMemberArray[i]['txtYear']) ==0 &&  parseInt(allMemberArray[i]['txtMonth']) > 6) || parseInt(allMemberArray[i]['txtYear']) > 0))
+				{
+					html += '<td class="red header"><a href="javascript:void(0)" onclick="mode=\'edit\'; filldata('+i+',0);">Edit</a>&nbsp;<a href="javascript:void(0)" onclick="mode=\'edit\'; filldata('+i+',1);">Edit sagrbha detail</a></td></tr>';
+				}
+				else
+				{
+					html += '<td class="red header"><a href="javascript:void(0)" onclick="mode=\'edit\'; filldata('+i+',0);">Edit</a></td></tr>';
+				}
 				
 			}
 			html += '</table>';
@@ -865,6 +1048,16 @@ var $= jQuery.noConflict();
 			$('#rdoRehvasiYes').prop('checked',false);
 			$('#rdoRehvasiNo').prop('checked',false);
 			
+			document.getElementById('janm_samay').value='';
+		document.getElementById('janm_sthal').value='';
+		document.getElementById('janm_samaye_thayel_vajan_kilogram').value='';
+		document.getElementById('janm_amaye_thayel_vajan_grams').value='';
+		document.getElementById('dilevery_type').value='';
+		document.getElementById('nondhani_date').value='';
+		
+		document.getElementById('lmp_date').value='';
+		document.getElementById('miscarage_date').value='';
+			
 			document.getElementById('familypersoninfo').value = JSON.stringify(allMemberArray);
 			
 			mode='add';
@@ -872,9 +1065,28 @@ var $= jQuery.noConflict();
 			
 		}
 	 }
-	 function filldata(i)
+	 function filldata(i,iseditsagrbha)
 	 {
 		 currenteditindex = i;
+		 		var $= jQuery.noConflict();
+		 if(parseInt(allMemberArray[i]['txtYear'])==0 && parseInt(allMemberArray[i]['txtMonth']) < 6)
+		 {
+		 	$('#navjatshishuTr1').css('display','table-row');
+			$('#navjatshishuTr2').css('display','table-row');
+			$('#sagrbhaTr1').css('display','none');
+		 }
+		 else if(iseditsagrbha || (allMemberArray[i]['lmp_date'] != '' && allMemberArray[i]['lmp_date'] != '0000-00-00'))
+		 {
+		 	$('#navjatshishuTr1').css('display','none');
+			$('#navjatshishuTr2').css('display','none');
+			$('#sagrbhaTr1').css('display','table-row');
+		 }
+		 else
+		 {
+		 	$('#navjatshishuTr1').css('display','none');
+			$('#navjatshishuTr2').css('display','none');
+			$('#sagrbhaTr1').css('display','none');
+		 }
 	 	document.getElementById('txtaadhar').value=allMemberArray[i]['txtaadhar'];
 		document.getElementById('txtfname').value=allMemberArray[i]['txtfname'];
 		document.getElementById('txtOutSthadantrarDate').value=allMemberArray[i]['txtOutSthadantrarDate'];
@@ -893,7 +1105,46 @@ var $= jQuery.noConflict();
 		document.getElementById('txtsthantarDate').value=allMemberArray[i]['txtsthantarDate'];
 		document.getElementById('txtDeathDate').value=allMemberArray[i]['txtDeathDate'];
 		
-		var $= jQuery.noConflict();
+		document.getElementById('janm_samay').value=allMemberArray[i]['janm_samay'];
+		document.getElementById('janm_sthal').value=allMemberArray[i]['janm_sthal'];
+		document.getElementById('janm_samaye_thayel_vajan_kilogram').value=allMemberArray[i]['janm_samaye_thayel_vajan_kilogram'];
+		document.getElementById('janm_amaye_thayel_vajan_grams').value=allMemberArray[i]['janm_amaye_thayel_vajan_grams'];
+		document.getElementById('dilevery_type').value=allMemberArray[i]['dilevery_type'];
+		document.getElementById('nondhani_date').value=allMemberArray[i]['nondhani_date'];
+		
+		if(allMemberArray[i]['lmp_date'] != '0000-00-00')
+			document.getElementById('lmp_date').value=allMemberArray[i]['lmp_date'];
+		
+		if(allMemberArray[i]['miscarage_date'] != '0000-00-00')
+			document.getElementById('miscarage_date').value=allMemberArray[i]['miscarage_date'];
+			
+		//	alert(allMemberArray[i]['dilevery_type'])
+		
+		if((parseInt(allMemberArray[i]['txtYear']) < 6) || (parseInt(allMemberArray[i]['txtYear']) == 6 || parseInt(allMemberArray[i]['txtMonth']) == 0))
+		{
+			html ='<select id="txtmothername" class="popuptxt" name="txtmothername" ><option value=""></option>';
+			for(var j =0;j<Object.keys(allMemberArray).length ; j++)
+			{
+				if(parseInt(allMemberArray[j]['txtYear']) >= 14 && allMemberArray[j]['drpGender'] == '3')
+				{
+					var selected='';
+					if(allMemberArray[i]['txtmothername'] == allMemberArray[j]['txtfname']+' '+allMemberArray[j]['txtmname']+' '+allMemberArray[j]['txtlname'])
+					{
+						selected = 'selected="selected"';
+					}
+					html += '<option '+selected+' value="'+allMemberArray[j]['txtfname']+' '+allMemberArray[j]['txtmname']+' '+allMemberArray[j]['txtlname']+'">'+allMemberArray[j]['txtfname']+' '+allMemberArray[j]['txtmname']+' '+allMemberArray[j]['txtlname']+'</option>';					
+					
+				}
+			}
+			html += '</select>';
+			document.getElementById('mothernamediv').innerHTML = html;
+		}
+		else
+		{
+		}
+			
+		
+
 		if(allMemberArray[i]['chkpurakAahar'] == '1')
 		{
 			$('#chkpurakAahar').prop('checked',true);
@@ -914,38 +1165,21 @@ var $= jQuery.noConflict();
 		
 	 }
 	 function onlyNos(e, t) {
-
             try {
-
                 if (window.event) {
-
                     var charCode = window.event.keyCode;
-
                 }
-
                 else if (e) {
-
                     var charCode = e.which;
-
                 }
-
                 else { return true; }
-
                 if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-
                     return false;
-
                 }
-
                 return true;
-
             }
-
             catch (err) {
-
                 alert(err.Description);
-
             }
-
         } 
 	 </script>

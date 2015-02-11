@@ -23,7 +23,16 @@ class Jilla_model extends CI_Model {
 		$query = $this->db->get();
 		return $query->result_array(); 
     }    
-
+    public function is_jillo_exists($jillo)
+    {
+        $this->db->select('id');
+        $this->db->from($this->table_name);
+        $this->db->where('name_guj', $jillo);
+        $query = $this->db->get();
+        $rs = $query->result_array();
+        return count($rs);
+    
+    }
     /**
     * Fetch jilla data from the database
     * possibility to mix search, filter and order
@@ -35,13 +44,12 @@ class Jilla_model extends CI_Model {
     * @return array
     */
     public function get_jilla($search_string=null, $order=null, $order_type='Asc', $limit_start=null, $limit_end=null)
-    {
-	    
+    {	    
 		$this->db->select('*');
 		$this->db->from($this->table_name);
 
 		if($search_string){
-			$this->db->like('name', $search_string);
+			$this->db->where("`name` like '".$search_string."' or `name_guj` like '".$search_string."'");
 		}
 		$this->db->group_by('id');
 
@@ -94,7 +102,7 @@ class Jilla_model extends CI_Model {
     function store_jilla($data)
     {
 		$insert = $this->db->insert($this->table_name, $data);
-	    return $insert;
+	    return $this->db->insert_id();
 	}
 
     /**

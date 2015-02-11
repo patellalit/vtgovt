@@ -67,7 +67,7 @@
 //		  $this->output->clear_all_cache();
 		  echo '<div class="main_container_width">';
 			  echo '<div class="control-group sub_parts_div">';
-				echo '<label for="jilla_id" class="control-label form_label_css">જીલ્લો</label>';
+				echo '<label for="jilla_id" class="control-label form_label_css">જીલ્લો <span style="color:#ff0000">*</span></label>';
 				//echo '<div class="controls">';
 				  echo form_dropdown('jilla_id', $options_jilla, set_value('jilla_id'), 'class="span2 width230" onchange="fetchTaluko(this.value,\''.base_url().'aanganvadi/fetchTaluko\')" id="jilla_id"');
 	
@@ -77,7 +77,7 @@
           
           <?php
 			  echo '<div class="control-group sub_parts_div">';
-				echo '<label for="taluka_id" class="control-label form_label_css">તાલુકો</label>';
+				echo '<label for="taluka_id" class="control-label form_label_css">તાલુકો <span style="color:#ff0000">*</span></label>';
 				//echo '<div class="controls">';
 				  echo form_dropdown('taluka_id', $options_taluka, set_value('taluka_id'), 'class="span2 width230" onchange="fetchGaam(this.value,\''.base_url().'aanganvadi/fetchGaam\')" id="taluka_id" ');
 	
@@ -87,7 +87,7 @@
           
           <?php
 			  echo '<div class="control-group sub_parts_div">';
-				echo '<label for="gaam_id" class="control-label form_label_css">ગામ</label>';
+				echo '<label for="gaam_id" class="control-label form_label_css">ગામ <span style="color:#ff0000">*</span></label>';
 				//echo '<div class="controls">';
 				  echo form_dropdown('gaam_id', $options_gaam, set_value('gaam_id'), 'class="span2 width230" id="gaam_id"');
 	
@@ -96,7 +96,7 @@
 		  	
 		  
 		  		echo '<div class="control-group sub_parts_div">';
-				echo '<label for="gaam_id" class="control-label form_label_css">પાસવર્ડ</label>';
+				echo '<label for="gaam_id" class="control-label form_label_css">પાસવર્ડ <span style="color:#ff0000">*</span></label>';
 				//echo '<div class="controls">';
 				  echo '<input type="password" id="password" name="password" value="" />';
 	
@@ -108,19 +108,19 @@
           
           <div  class="main_container_width">
 			  <div class="control-group double_part_div">
-				<label for="inputError" class="control-label form_label_css" >આંગણવાડી નામ</label>
+				<label for="inputError" class="control-label form_label_css" >આંગણવાડી નામ <span style="color:#ff0000">*</span></label>
 				<div class="controls marginleft0">
 				  <input type="text" id="aanganvadi_name" name="aanganvadi_name" value="<?php echo set_value('aanganvadi_name'); ?>" class="width463" >
 				</div>
 			  </div>
 			  <div class="control-group sub_parts_div">
-				<label for="inputError" class="control-label form_label_css">આંગણવાડી નંબર</label>
+				<label for="inputError" class="control-label form_label_css">આંગણવાડી નંબર <span style="color:#ff0000">*</span></label>
 				<div class="controls marginleft0">
 				  <input type="text" id="aanganvadi_number" name="aanganvadi_number" value="<?php echo set_value('aanganvadi_number'); ?>" class="width223">
 				</div>
 			  </div>          
 			  <div class="control-group sub_parts_div">
-				<label for="inputError" class="control-label form_label_css">આંગણવાડી સ્થળ</label>
+				<label for="inputError" class="control-label form_label_css">આંગણવાડી સ્થળ <span style="color:#ff0000">*</span></label>
 				<div class="controls marginleft0">
 				  <input type="text" id="place" name="place" value="<?php echo set_value('place'); ?>" class="width223">
 				</div>
@@ -129,7 +129,7 @@
 		  </div>
 		  <div  class="main_container_width">
 			  <div class="control-group double_part_div">
-				<label for="inputError" class="control-label form_label_css">સરનામું</label>
+				<label for="inputError" class="control-label form_label_css">સરનામું <span style="color:#ff0000">*</span></label>
 				<div class="controls marginleft0">
 				  <!--<input type="text" name="address" value="<?php echo set_value('address'); ?>">-->
 				  <textarea id="address" name="address" class="addresstextarea" ><?php echo set_value('address'); ?></textarea>
@@ -137,26 +137,26 @@
 			  </div>
 			  <div class="double_part_div">
 				  <div class="control-group sub_parts_div">
-					<label for="inputError" class="control-label form_label_css">આંગણવાડી કાર્યકર નામ</label>
+					<label for="inputError" class="control-label form_label_css">આંગણવાડી કાર્યકર નામ <span style="color:#ff0000">*</span></label>
 					<div class="controls marginleft0">
 					  <input type="text" name="karyakar_name" id="karyakar_name" class="width223" value="<?php echo set_value('karyakar_name'); ?>">
 					</div>
 				  </div>
 				  <div class="control-group sub_parts_div">
-					<label for="inputError" class="control-label form_label_css">મોબાઇલ</label>
+					<label for="inputError" class="control-label form_label_css">મોબાઇલ <span style="color:#ff0000">*</span></label>
 					<div class="controls marginleft0">
 					  <input type="text" name="karyakar_number" id="karyakar_number" class="width223" value="<?php echo set_value('karyakar_number'); ?>">
 					</div>
 				  </div>
 				  <div class="classclear"></div>
 				  <div class="control-group sub_parts_div">
-					<label for="inputError" class="control-label form_label_css">આંગણવાડી તેડાગર નામ</label>
+					<label for="inputError" class="control-label form_label_css">આંગણવાડી તેડાગર નામ <span style="color:#ff0000">*</span></label>
 					<div class="controls marginleft0">
 					  <input type="text" name="tedagara_name" id="tedagara_name" class="width223" value="<?php echo set_value('tedagara_name'); ?>">
 					</div>
 				  </div>
 				  <div class="control-group sub_parts_div">
-					<label for="inputError" class="control-label form_label_css">મોબાઇલ</label>
+					<label for="inputError" class="control-label form_label_css">મોબાઇલ <span style="color:#ff0000">*</span></label>
 					<div class="controls marginleft0">
 					  <input type="text" name="tedagara_number" id="tedagara_number" class="width223" value="<?php echo set_value('tedagara_number'); ?>">
 					</div>

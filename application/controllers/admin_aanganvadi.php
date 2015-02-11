@@ -12,6 +12,10 @@ class Admin_aanganvadi extends CI_Controller {
         $this->load->model('taluka_model');
 		$this->load->model('gaam_model');
 		$this->load->model('aanganvadi_model');
+		$this->load->model('common_model');
+        if(!$this->session->userdata('is_logged_in')){
+            redirect(site_url());exit;
+        }
     }
  
     /**
@@ -20,35 +24,42 @@ class Admin_aanganvadi extends CI_Controller {
     */
     public function index()
     {
-		
-		//$perPage = $this->uri->segment(4);
-		//echo $perPage;
-		//if($perPage=='')
-		//{
-			$perPage = 20;
-		//}
+        
+        
+        
+		$perPage = 20;
 		$data['perpage'] = $perPage;
         //all the posts sent by the view
-        $jilla_id = $this->input->post('jilla_id');
-		$taluka_id = $this->input->post('taluka_id');
-		$gaam_id = $this->input->post('gaam_id');
-		$perpagePost = $this->input->post('perpage');
+        $jilla_id = $this->input->get('jilla_id');
+		$taluka_id = $this->input->get('taluka_id');
+		$gaam_id = $this->input->get('gaam_id');
+		$perpagePost = $this->input->get('perpage');
 		if($perpagePost != '')
 		{
 			$perPage = $perpagePost;
 		}
 		$data['perpage'] = $perPage;
-		$currentpagePost = $this->input->post('currentpage');
+		$currentpagePost = $this->input->get('currentpage');
 		
-        $search_string = $this->input->post('search_string');        
-        $order = $this->input->post('order'); 
+        $search = $this->input->get('search');
+		if($search != '')
+		{			
+			$data['search']=$search;
+		}
+		else
+		{
+			$data['search']='';
+		}
+		
+		       
+        $order = $this->input->get('order'); 
 		if($order == '')
 			$order="id";
-        $order_type = $this->input->post('order_type'); 
+        $order_type = $this->input->get('order_type');
 
         //pagination settings
         $config['per_page'] = $perPage;
-        $config['base_url'] = base_url().'aanganvadi/page';
+        $config['base_url'] = base_url().'aanganvadi/page?'.http_build_query($_GET);
         $config['use_page_numbers'] = TRUE;
         $config['num_links'] = 20;
         $config['full_tag_open'] = '<ul>';
@@ -64,6 +75,7 @@ class Admin_aanganvadi extends CI_Controller {
 		{
 			$page = $currentpagePost;
 		}
+		
         //math to get the initial record to be select in the database
         $limit_end = ($page * $config['per_page']) - $config['per_page'];
         if ($limit_end < 0){
@@ -127,12 +139,12 @@ $order='id';
             }
             $data['gaam_selected'] = $gaam_id;
 
-            if($search_string){
-                $filter_session_data['search_string_selected'] = $search_string;
+            if($search){
+                $filter_session_data['search_string_selected'] = $search;
             }else{
                 $search_string = $this->session->userdata('search_string_selected');
             }
-            $data['search_string_selected'] = $search_string;
+            $data['search_string_selected'] = $search;
 
             if($order){
                 $filter_session_data['order'] = $order;
@@ -158,11 +170,11 @@ $order='id';
             $config['total_rows'] = $data['count_aanganvadi'];
 
             //fetch sql data into arrays
-            if($search_string){
+            if($search){
                 if($order){
-                    $data['aanganvadi'] = $this->aanganvadi_model->get_aanganvadi($jilla_id,$taluka_id,$gaam_id, '', '', $order_type, $config['per_page'],$limit_end);        
+                    $data['aanganvadi'] = $this->aanganvadi_model->get_aanganvadi($jilla_id,$taluka_id,$gaam_id, $search, '', $order_type, $config['per_page'],$limit_end);        
                 }else{
-                    $data['aanganvadi'] = $this->aanganvadi_model->get_aanganvadi($jilla_id,$taluka_id,$gaam_id, '', '', $order_type, $config['per_page'],$limit_end);           
+                    $data['aanganvadi'] = $this->aanganvadi_model->get_aanganvadi($jilla_id,$taluka_id,$gaam_id,  $search, '', $order_type, $config['per_page'],$limit_end);           
                 }
             }else{
                 if($order){
@@ -195,8 +207,8 @@ $order='id';
 			$data['taluka'] = array();//$this->taluka_model->get_taluka();
 			$data['gaam'] = array();//$this->gaam_model->get_gaam();
 			
-            $data['count_aanganvadi']= $this->aanganvadi_model->count_aanganvadi();
-            $data['aanganvadi'] = $this->aanganvadi_model->get_aanganvadi('','','', '', '', $order_type, $config['per_page'],$limit_end);        
+            $data['count_aanganvadi']= $this->aanganvadi_model->count_aanganvadi($search);
+            $data['aanganvadi'] = $this->aanganvadi_model->get_aanganvadi('','','',$search, '', $order_type, $config['per_page'],$limit_end);        
             $config['total_rows'] = $data['count_aanganvadi'];
 
         }//!isset($manufacture_id) && !isset($search_string) && !isset($order)
@@ -296,8 +308,11 @@ $order='id';
 					'tedagara_number' => $this->input->post('tedagara_number'),
 					'password' => $this->input->post('password')       
                 );
+				$aanganwadiid=$this->aanganvadi_model->store_aanganvadi($data_to_store);
                 //if the insert has returned true then we show the flash message
-                if($this->aanganvadi_model->store_aanganvadi($data_to_store)){
+                if($aanganwadiid){
+					$data_to_send = "id=".$aanganwadiid."&villages_id=".$this->input->post('gaam_id')."&guj_anganwadi_name=".$this->input->post('aanganvadi_name')."&anganwadi_name=".$this->input->post('aanganvadi_name')."&anganwadi_code=".$this->input->post('aanganvadi_number')."&guj_worker_name=".$this->input->post('karyakar_name')."&worker_name=".$this->input->post('karyakar_name')."&worker_mobile=".$this->input->post('karyakar_number')."&guj_helper_name=".$this->input->post('tedagara_name')."&helper_name=".$this->input->post('tedagara_name')."&helper_mobile=".$this->input->post('tedagara_number')."&status=1";
+					$this->common_model->save_curl_data($data_to_send,'addanganwadi.json');
                     $data['flash_message'] = TRUE; 
                 }else{
                     $data['flash_message'] = FALSE; 
@@ -366,6 +381,9 @@ $order='id';
                 );
                 //if the insert has returned true then we show the flash message
                 if($this->aanganvadi_model->update_aanganvadi($id, $data_to_store) == TRUE){
+					$data_to_send = "id=".$id."&villages_id=".$this->input->post('gaam_id')."&guj_anganwadi_name=".$this->input->post('aanganvadi_name')."&anganwadi_name=".$this->input->post('aanganvadi_name')."&anganwadi_code=".$this->input->post('aanganvadi_number')."&guj_worker_name=".$this->input->post('karyakar_name')."&worker_name=".$this->input->post('karyakar_name')."&worker_mobile=".$this->input->post('karyakar_number')."&guj_helper_name=".$this->input->post('tedagara_name')."&helper_name=".$this->input->post('tedagara_name')."&helper_mobile=".$this->input->post('tedagara_number')."&status=1";
+					$this->common_model->save_curl_data($data_to_send,'editanganwadi.json');
+					
                     $this->session->set_flashdata('flash_message', 'updated');
                 }else{
                     $this->session->set_flashdata('flash_message', 'not_updated');
@@ -402,6 +420,9 @@ $order='id';
         //aanganvadi id 
         $id = $this->uri->segment(3);
         $this->aanganvadi_model->delete_aanganvadi($id);
+		$data_to_send = "id=".$id;
+		$this->common_model->save_curl_data($data_to_send,'deleteanganwadi.json');
+					
         redirect('aanganvadi');
     }//edit
 

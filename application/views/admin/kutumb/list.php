@@ -11,14 +11,15 @@
 			{
 			
 		  ?>
-          <a  href="javascript:void(0)" class="btn btn-success" onclick="if(document.getElementById('aanganvadi_id').value != '' && document.getElementById('aanganvadi_id').value != '0'){document.location.href='<?php echo base_url() ?>kutumb/addkutumb?id='+document.getElementById('aanganvadi_id').value;} else {alert('Please select aanganvadi.');}">Add a new</a>
+          <a  href="javascript:void(0)" class="btn btn-success" onclick="if(document.getElementById('aanganvadi_id').value != '' && document.getElementById('aanganvadi_id').value != '0'){document.location.href='<?php echo base_url() ?>kutumb/addkutumb?id='+document.getElementById('aanganvadi_id').value;} else {alert('Please select aanganvadi.');}">નવો કુટુંબ ઉમેરો</a>
 		  <?php 
 		  }
 		  else
 		  {
-		  echo ' - '.$kutumb[0]['aanganvadi_name'];
+		  if(!empty($kutumb))
+			  echo ' - '.$kutumb[0]['aanganvadi_name'];
 		  ?>
-		  <a  href="javascript:void(0)" class="btn btn-success" onclick="document.location.href='<?php echo base_url() ?>kutumb/addkutumb?id=<?php echo $this->session->userdata('user_id'); ?>';">Add a new</a>
+		  <a  href="javascript:void(0)" class="btn btn-success" onclick="document.location.href='<?php echo base_url() ?>kutumb/addkutumb?id=<?php echo $this->session->userdata('user_id'); ?>';">નવો કુટુંબ ઉમેરો</a>
 		  <?php
 		  
 		  }
@@ -31,7 +32,7 @@
            
             <?php
            
-            $attributes = array('class' => 'form-inline reset-margin', 'id' => 'myform');
+            $attributes = array('class' => 'form-inline reset-margin', 'id' => 'myform','method'=>"GET");
            
             $options_jilla = array(0 => "all");
             foreach ($jilla as $row)
@@ -56,10 +57,22 @@
             {
               $options_aanganvadi[$row['id']] = $row['aanganvadi_name'];
             }
+                
+                $options_jati = array();
+                foreach ($castArray as $row)
+                {
+                    $options_jati[$row['id']] = $row['name_guj'];
+                }
+                $options_religion = array();
+                foreach ($religionArray as $row)
+                {
+                    $options_religion[$row['id']] = $row['name_guj'];
+                }
 			
+                $options_laghumati = array('0'=>'પસંદ કરો','1'=>'હા','2'=>'ના');
 			
             //save the columns names in a array that we will use as filter         
-            $options_kutumb = array(0 => "all");    
+            $options_kutumb = array(0 => "all");
             foreach ($kutumb as $array) {
               foreach ($array as $key => $value) {
                 $options_kutumb[$key] = $key;
@@ -88,6 +101,17 @@
               echo form_dropdown('aanganvadi_id', $options_aanganvadi, $aanganwadiid_selected, 'class="span2"  id="aanganvadi_id"');
 			  
 			  echo '&nbsp;&nbsp;<input type="text" id="searchtxt" name="searchtxt" value="'.$searchtxt.'" />';
+                
+              
+              echo form_label('જાતિ', 'jati_id');
+              echo form_dropdown('jati_id', $options_jati, $jati_selected, 'class="span2"  id="jati_id"');
+                
+              echo form_label('ધર્મ', 'religion_id');
+              echo form_dropdown('religion_id', $options_religion, $religion_selected, 'class="span2"  id="religion_id"');
+                
+                echo form_label('લઘુમતી', 'laghumati');
+                echo form_dropdown('laghumati', $options_laghumati, $laghumati_selected, 'class="span2"  id="laghumati"');
+              
 
              // echo form_label('Order by:', 'order');
               //echo form_dropdown('order', $options_aanganvadi, $order, 'class="span2"');
@@ -95,14 +119,23 @@
               //$data_submit = array('name' => 'mysubmit', 'class' => 'btn btn-primary', 'value' => 'Add kutumb','onclick'=>'document.location.href=\''.base_url().'\'kutumb/addkutumb');
 			  
 			  ?>
-			  <input type="button" class="btn btn-primary" value="શોધ કરવી" name="mysubmit" onclick="if(document.getElementById('aanganvadi_id').value != '0' || document.getElementById('searchtxt').value!=''){this.form.submit();} else {alert('Please select aanganvadi or search text.');}"><br /><br />
+			  <input type="hidden" id="perpage" name="perpage" value="<?php echo $perpage ?>" />
+			  <input type="hidden" id="currentpage" name="currentpage" value="<?php echo $currentpage ?>" />
+			  <input type="button" class="btn btn-primary" value="શોધ કરવી" name="mysubmit" onclick="if(document.getElementById('jati_id').value != '0' || document.getElementById('aanganvadi_id').value != '0' || document.getElementById('searchtxt').value!=''){this.form.submit();} else {alert('Please select aanganvadi or search text.');}"><br /><br />
 			 
 <?php
 }
 else
 {
-	echo '<input type="text" id="searchtxt" name="searchtxt" value="'.$searchtxt.'" />';	  
+    echo form_label('જાતિ', 'jati_id');
+    echo form_dropdown('jati_id', $options_jati, $jati_selected, 'class="span2"  id="jati_id"');
+	echo '<input type="text" id="searchtxt" name="searchtxt" value="'.$searchtxt.'" />';
+    
+    echo form_label('ધર્મ', 'religion_id');
+    echo form_dropdown('religion_id', $options_religion, $religion_selected, 'class="span2"  id="religion_id"');
 			  ?>
+			  <input type="hidden" id="perpage" name="perpage" value="<?php echo $perpage ?>" />
+			  <input type="hidden" id="currentpage" name="currentpage" value="<?php echo $currentpage ?>" />
 			  <input type="button" class="btn btn-primary" value="શોધ કરવી" name="mysubmit" onclick="this.form.submit();"><br /><br />
 			  <?php
 }
@@ -113,12 +146,13 @@ else
 
             echo form_close();
 			
-			$jati = array('-','અનુ.જાતિ','અનુ.જનજાતિ','સામાજીક અને શૈક્ષણિક રીતે પછાત','અન્ય');
-			$dhrm = array('-','બુદ્ધ','ખ્રિસ્તી','હિંદુ','ઇસ્લામ','જૈન','શીખ','અન્ય');
-			$sthl = array('-','શેરી','વાસ','ફળીયું','વોર્ડ');
+			
+
 			$laghu = array('-','હા','ના');
             ?>
-			
+			<strong>કુલ ખોડખાંપણ : </strong><?php echo $count_kutumb_khodkhapan; ?>&nbsp;&nbsp;&nbsp;<strong>કુલ મરણ : </strong><?php echo $count_kutumb_death; ?>&nbsp;&nbsp;&nbsp;
+			<strong>કુલ જન્મ : </strong><?php echo $count_kutumb_birth; ?>&nbsp;&nbsp;&nbsp;
+			<br /><br />
 			<table class="table table-striped table-bordered table-condensed">
             <thead>
               <tr>
@@ -135,7 +169,10 @@ else
                 <th class="red header">જાતિ</th>
                 <th class="red header">ધર્મ</th>
                 <th class="red header">સ્થળ</th>
-                <th class="red header">રાજ્યમાં લઘુમતી છે.</th>				
+                <th class="red header">રાજ્યમાં લઘુમતી છે.</th>
+<?php /* <th class="red header">ખોડખાંપણ</th>
+<th class="red header">મરણ.</th>
+<th class="red header">જન્મ</th> */ ?>
                 <th class="red header">&nbsp;</th>				
               </tr>
             </thead>
@@ -166,12 +203,18 @@ else
 					echo '<td>'.$placeArray[$row['sthal_id']-1]['name_guj'].' - '.$row['sthal_value'].'</td>';
 					
 				echo '<td>'.$laghu[$row['laghumati']].'</td>';
+                  
+                 /* echo '<td>'.$row['total_khodkhapan'].'</td>';
+                  echo '<td>'.$row['total_death'].'</td>';
+                  echo '<td>'.$row['total_birth'].'</td>';*/
+                  
 		        echo '<td>';
-				echo '<a href="'.site_url("").'kutumb/update/'.$row['family_id'].'" class="btn btn-info">view & edit</a>';
+				echo '<a href="'.site_url("").'kutumb/update/'.$row['family_id'].'" class="btn btn-info">View & Edit</a>';
 				if($this->session->userdata('is_admin')==true)
 				{
-					  echo '<a href="javascript:void(0)" onclick="if(confirm(\'Are you sure you want to delete this kutumb?\')){document.location.href=\''.site_url("").'kutumb/delete/'.$row['family_id'].'\'}" class="btn btn-danger">delete</a>';
+					  echo '<a href="javascript:void(0)" onclick="if(confirm(\'Are you sure you want to delete this kutumb?\')){document.location.href=\''.site_url("").'kutumb/delete/'.$row['family_id'].'\'}" class="btn btn-danger">Delete</a>';
 				}
+                  echo '<a target="_blank" class="btn btn-danger" href="'.site_url().'kutumb/printpdf/'.$row['family_id'].'">Print</a>';
 				echo '</td>';
 				
                 echo '</tr>';
@@ -180,8 +223,42 @@ else
             </tbody>
           </table>
 
-          <?php echo '<div class="pagination">'.$this->pagination->create_links().'</div>'; ?>
+          <?php echo '<div class="pagination"><div class="pagingLeft"><select style="width:100px" id="rowsperpage" name="rowsperpage" onchange="changePaging()"><option value="20">20</option><option value="50">50</option><option value="75">75</option><option value="100">100</option></select></div><div class="pagingCenter"><input type"text" id="gotopage" name="gotopage" value="'.$currentpage.'" style="width:100px" onKeyPress="return changePage(event,this);" /></div><div class="pagingRight">'.$this->pagination->create_links().'</div><div style="clear:both"></div></div>'; ?>
 
           </div>
       </div>
     </div>
+	<script src="<?php echo base_url(); ?>assets/js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript">
+		var $ = jQuery.noConflict();
+		$(document).ready(function(){
+			$('#rowsperpage').val('<?php echo $perpage ?>');
+		}
+		);
+		function changePage(e,textbox)
+		{
+			var code = (e.keyCode ? e.keyCode : e.which);
+			if(code == 13 && document.getElementById('gotopage').value!='') { //Enter keycode
+				$('#perpage').val($('#rowsperpage').val());
+				$('#currentpage').val($('#gotopage').val());
+				$("#myform").attr("action", '<?php echo base_url('kutumb/page') ?>/'+document.getElementById('gotopage').value);
+				$('#myform').submit();				
+			}
+			else
+			{			
+				if (code > 31 && (code < 48 || code > 57)) {
+				
+                    return false;
+                }
+                return true;
+			}
+		}
+		function changePaging()
+		{
+			$('#perpage').val($('#rowsperpage').val());
+			$('#currentpage').val($('#gotopage').val());
+			$("#myform").attr("action", '<?php echo base_url('kutumb/page') ?>/'+document.getElementById('gotopage').value);
+			$('#myform').submit();
+		}
+		
+	</script>

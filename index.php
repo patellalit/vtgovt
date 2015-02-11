@@ -1,4 +1,4 @@
-§§<?php
+<?php
 
 /*
  *---------------------------------------------------------------
@@ -46,7 +46,7 @@ if (defined('ENVIRONMENT'))
 			exit('The application environment is not set correctly.');
 	}
 }
-
+date_default_timezone_set("Asia/Kolkata");
 /*
  *---------------------------------------------------------------
  * SYSTEM FOLDER NAME

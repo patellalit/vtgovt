@@ -134,8 +134,8 @@ class Aanganvadi_model extends CI_Model {
 		
 
 		if($search_string){
-
-			$this->db->like('aanganvadi_name', $search_string);
+			$this->db->where('aanganvadi_name like "'.$search_string.'" or aanganvadi_name like "'.$search_string.'" or karyakar_name like "'.$search_string.'" or tedagara_name like "'.$search_string.'"');
+			//$this->db->like('aanganvadi_name', $search_string);
 
 		}
 
@@ -204,8 +204,8 @@ class Aanganvadi_model extends CI_Model {
 		$this->db->from($this->table_name);
 
 		if($search_string){
-
-			$this->db->like('aanganvadi_name', $search_string);
+			$this->db->where('aanganvadi_name like "'.$search_string.'" or aanganvadi_name like "'.$search_string.'" or karyakar_name like "'.$search_string.'" or tedagara_name like "'.$search_string.'"');
+			//$this->db->like('aanganvadi_name', $search_string);
 
 		}
 
@@ -243,7 +243,7 @@ class Aanganvadi_model extends CI_Model {
 
 		$insert = $this->db->insert($this->table_name, $data);
 
-	    return $insert;
+	    return $this->db->insert_id();
 
 	}
 

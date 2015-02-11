@@ -1,12 +1,41 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+	<style>
+	.ui-datepicker-calendar {
+		display: none;
+	}​
+	</style>
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 <script>
 	var $2 = jQuery.noConflict();
 	$2(function() {
-		$2( "#date" ).datepicker({maxDate: '0',yearRange: "-100:+0",dateFormat: 'yy/mm/dd',});
+		$2( "#date" ).datepicker({
+			//maxDate: '0',
+			//yearRange: "-100:+0",
+			//dateFormat: 'yy/mm/dd',
+			changeMonth: true,
+			changeYear: true,
+			dateFormat: 'MM yy',
+			showButtonPanel:true,
+			onClose: function() {
+	        var iMonth = $2("#ui-datepicker-div .ui-datepicker-month :selected").val();
+	        var iYear = $2("#ui-datepicker-div .ui-datepicker-year :selected").val();
+	        $2(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+	     },
+	 
+	     beforeShow: function() {
+	       if ((selDate = $(this).val()).length > 0)
+	       {
+	          iYear = selDate.substring(selDate.length - 4, selDate.length);
+	          iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5),
+	                   $2(this).datepicker('option', 'monthNames'));
+	          $2(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+	          $2(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+	       }
+	    }
 		});
-		</script>
+	});
+	</script>
 	<!-- Add jQuery library -->
 	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/lib/jquery-1.10.1.min.js"></script>
 
@@ -46,26 +75,8 @@
         <div class="span12 columns">
           <div class="well">           
             <?php           
-            $attributes = array('class' => 'form-inline reset-margin', 'id' => 'myform');           
-            $options_jilla = array(0 => "all");
-            foreach ($jilla as $row)
-            {
-              $options_jilla[$row['id']] = $row['name_guj'];
-            }
-			
-			$options_taluka = array(0 => "all");
-            foreach ($taluka as $row)
-            {
-              $options_taluka[$row['id']] = $row['name_guj'];
-            }
-			
-			$options_gaam = array(0 => "all");
-            foreach ($gaam as $row)
-            {
-              $options_gaam[$row['id']] = $row['name_guj'];
-            }
-			
-			$options_aanganvadi = array(0 => "all");
+            $attributes = array('class' => 'form-inline reset-margin', 'id' => 'myform','method'=>'GET');
+            $options_aanganvadi = array(0 => "all");
             foreach ($aanganvadi as $row)
             {
               $options_aanganvadi[$row['id']] = $row['aanganvadi_name'];
@@ -87,22 +98,13 @@
               //echo form_input('search_string', $search_string_selected, 'style="width: 170px;height: 26px;"');
 
 		  	if($this->session->userdata('is_admin')==true)
-			{
-		  
-              echo form_label('જીલ્લો:', 'jilla_id');
-              echo form_dropdown('jilla_id', $options_jilla, $jilla_selected, 'class="span2" onchange="fetchTaluko(this.value,\''.base_url().'aanganvadi/fetchTaluko\')"');
-			  
-			  echo form_label('તાલુકો:', 'taluka_id');
-              echo form_dropdown('taluka_id', $options_taluka, $taluka_selected, 'class="span2" onchange="fetchGaam(this.value,\''.base_url().'aanganvadi/fetchGaam\')" id="taluka_id"');
-			  
-			  echo form_label('ગામ:', 'gaam_id');
-              echo form_dropdown('gaam_id', $options_gaam, $gaam_selected, 'class="span2"  id="gaam_id" onchange="fetchAanganvadi(this.value,\''.base_url().'aanganvadi/fetchAanganvadi\')"');
-			  
+			{	  
+              
 			  echo form_label('આંગણવાડી', 'aanganvadi_id');
               echo form_dropdown('aanganvadi_id', $options_aanganvadi, $aanganwadiid_selected, 'class="span2"  id="aanganvadi_id"');
 			  ?>
-			  &nbsp;&nbsp;<input type="text" id="date" name="date" value="" />
-			  <input type="button" class="btn btn-primary" value="શોધ કરવી" name="mysubmit" onclick="if(document.getElementById('aanganvadi_id').value != '0'){this.form.submit();} else {alert('Please select aanganvadi.');}">
+			  &nbsp;&nbsp;<input type="text" id="date" name="date" value="<?php echo $date ?>" />
+			  <input type="button" class="btn btn-primary" value="શોધ કરવી" name="mysubmit" onclick="this.form.submit();">
 <?php
 			}
 			else
@@ -113,55 +115,69 @@
 			  <input type="button" class="btn btn-primary" value="શોધ કરવી" name="mysubmit" onclick="this.form.submit();">
 			<?php
 			}
+			?>
+			<input type="hidden" id="perpage" name="perpage" value="<?php echo $perpage ?>" />
+			  <input type="hidden" id="currentpage" name="currentpage" value="<?php echo $currentpage ?>" />
+			<?php
             echo form_close();
             ?>
 			<br />
-			<table class="table table-striped table-bordered table-condensed">
-            <thead>
-              <tr>
-                <th class="header">ક્રમ નંબર</th>
-                <th class="yellow header headerSortDown">આંગણવાડી નામ</th>
-				<th class="red header">આંગણવાડી સ્થળ</th>
-                <th class="red header">સરનામું</th>
-                <th class="red header">જીલ્લો</th>
-                <th class="red header">તાલુકો</th>
-                <th class="red header">ગામ</th>
-                <th class="red header">તારીખ</th>
-                <th class="red header">પ્રથમ ફોટો</th>
-                <th class="red header">બીજા ફોટો</th>
-                <th width="15%" class="red header">&nbsp;</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php
-              foreach($attedence as $row)
-              {
-                echo '<tr>';
-                echo '<td>'.$row['attendance_id'].'</td>';
-                echo '<td>'.$row['aanganvadi_name'].'</td>';
-				echo '<td>'.$row['place'].'</td>';
-                echo '<td>'.$row['address'].'</td>';
-                echo '<td>'.$row['jilla_name'].'</td>';
-				echo '<td>'.$row['taluka_name'].'</td>';
-				echo '<td>'.$row['gaam_name'].'</td>';
-                echo '<td>'.date('d/m/Y',strtotime($row['attendance_date'])).'</td>';
-				if($row['first_photo']=='')
-	                echo '<td>-</td>';
-				else
-					echo '<td><img src="'.base_url().'assets/uploads/'.$row['first_photo'].'" style="height:70px;width:70px" /></td>';
-				if($row['second_photo']=='')
-	                echo '<td>-</td>';
-				else
-					echo '<td><img src="'.base_url().'assets/uploads/'.$row['second_photo'].'" style="height:70px;width:70px" /></td>';
+			
+			<div style="width:100%;height:100%;overflow:scroll">
+			<?php 
+			if(count($attedence) == 0)
+			{
+				echo '<div>No information available.</div>';
+			}
+			else
+			{
+			?>
+				<table class="table table-striped table-bordered table-condensed">
+				<thead>
+				  <tr>
+					<th class="header">ક્રમ નંબર</th>
+					<th class="yellow header headerSortDown">આંગણવાડી નામ</th>
+					<th class="red header">નામ</th>        
+					<?php 
+					for($i=0;$i<count($attedence[0]['monthPresent']);$i++)
+					{
+						$date = $i+1;
+						echo '<th class="red header"><a href="javascript:void(0)" onclick="showimagepopup(\''.$date.'\')">'.$date.'</a></th>';
+					}
+					?>        
+					<th width="15%" class="red header">&nbsp;</th>
+				  </tr>
+				</thead>
+				<tbody>
+				  <?php
+				  foreach($attedence as $row)
+				  {
+					echo '<tr>';
+					echo '<td>'.$row['member_id'].'</td>';
+					echo '<td>'.$row['aanganvadi_name'].'</td>';
+					echo '<td>'.$row['first_name'].''.$row['middle_name'].''.$row['last_name'].'</td>';
 					
-                echo '<td><a href="javascript:void(0)" onclick="showattendencepopup(\''.base_url().'attendance/showattendence?id='.$row['attendance_id'].'\')" class="btn btn-info">View Attendance</a></td>';
-                echo '</tr>';
-              }
-              ?>      
-            </tbody>
-          </table>
-
-          <?php echo '<div class="pagination">'.$this->pagination->create_links().'</div>'; ?>
+					for($i=0;$i<count($attedence[0]['monthPresent']);$i++)
+					{
+						$ispresent='-';
+						if($row['monthPresent'][$i]=='1')
+							$ispresent='Y';
+						if($row['monthPresent'][$i]=='0')
+							$ispresent='N';
+						echo '<td>'.$ispresent.'</td>';
+					}
+					  
+					echo '<td>&nbsp;</td>';
+					echo '</tr>';
+				  }
+				  ?>      
+				</tbody>
+			  </table>
+			 <?php
+			 }
+			 ?>
+		</div>
+          <?php echo '<div class="pagination"><div class="pagingLeft"><select style="width:100px" id="rowsperpage" name="rowsperpage" onchange="changePaging()"><option value="20">20</option><option value="50">50</option><option value="75">75</option><option value="100">100</option></select></div><div class="pagingCenter"><input type"text" id="gotopage" name="gotopage" value="'.$currentpage.'" style="width:100px" onKeyPress="return changePage(event,this);" /></div><div class="pagingRight">'.$this->pagination->create_links().'</div><div style="clear:both"></div></div>'; ?>
 
           </div>
       </div>
@@ -172,9 +188,17 @@
 		</div>
 	</div>
 	<script type="text/javascript">
+    function showimagepopup(url)
+    {
+        var $1 = jQuery.noConflict();
+       $1('#showattendance').html('<img src="'+url+'" />');
+       
+       $1('#openfancyboxlink').click();
+        
+    }
 	function showattendencepopup(url)
 	{
-	//alert(url);
+	
 		var $ = jQuery.noConflict();
 		$.ajax({
            url : url,
@@ -194,4 +218,42 @@
            }
     });
 	}
+	var $ = jQuery.noConflict();
+		$(document).ready(function(){
+
+			$('#rowsperpage').val('<?php echo $perpage ?>');
+		}
+		);
+	function changePage(e,textbox)
+		{
+			var code = (e.keyCode ? e.keyCode : e.which);
+			if(code == 13 && document.getElementById('gotopage').value!='') { //Enter keycode
+				/*if(document.getElementById('aanganvadi_id').value != '0' || document.getElementById('searchtxt').value!='')
+				{*/
+					$('#perpage').val($('#rowsperpage').val());
+					$('#currentpage').val($('#gotopage').val());
+					$('#myform').submit();
+				/*}
+				else
+				{
+			 		document.location.href='<?php echo base_url('kutumb/page') ?>/'+document.getElementById('gotopage').value+'/'+document.getElementById('rowsperpage').value;
+				}*/
+			}
+			else
+			{
+			
+				if (code > 31 && (code < 48 || code > 57)) {
+				
+                    return false;
+                }
+                return true;
+			}
+		}
+		function changePaging()
+		{
+			$('#perpage').val($('#rowsperpage').val());
+					$('#currentpage').val($('#gotopage').val());
+					$('#myform').submit();
+			//document.location.href='<?php echo base_url('kutumb/page/'.$currentpage) ?>/'+document.getElementById('rowsperpage').value;			
+		}
 	</script>

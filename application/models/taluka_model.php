@@ -22,7 +22,19 @@ class Taluka_model extends CI_Model {
 		$this->db->where('id', $id);
 		$query = $this->db->get();
 		return $query->result_array(); 
-    }    
+    }
+    
+    public function is_taluko_exists($taluko,$jillo_id,$talukoid)
+    {
+        $this->db->select('id');
+        $this->db->from($this->table_name);
+        $this->db->where('name_guj', $taluko);
+        $this->db->where('jilla_id', $jillo_id);
+        if($talukoid !=0)
+            $this->db->where('id !='. $talukoid);
+        $query = $this->db->get();
+        return count($query->result_array());
+    }
 
     /**
     * Fetch taluka data from the database
@@ -50,7 +62,7 @@ class Taluka_model extends CI_Model {
 		$this->db->group_by($this->table_name.'.id');
 		
 		if($search_string){
-			$this->db->like('name', $search_string);
+			$this->db->where($this->table_name.".`name` like '".$search_string."' or ".$this->table_name.".`name_guj` like '".$search_string."'");
 		}
 		$this->db->group_by('id');
 
@@ -69,7 +81,9 @@ class Taluka_model extends CI_Model {
         }
         
 		$query = $this->db->get();
-		
+//		echo "<pre>";
+//		print_r($this->db->last_query());
+//		echo "</pre>";
 		return $query->result_array(); 	
     }
 
@@ -79,12 +93,12 @@ class Taluka_model extends CI_Model {
     * @param int $order
     * @return int
     */
-    function count_taluka($search_string=null, $order=null)
+    function count_taluka($jilla_id=null,$search_string=null, $order=null)
     {
 		$this->db->select('*');
 		$this->db->from($this->table_name);
 		if($search_string){
-			$this->db->like('name', $search_string);
+			$this->db->where($this->table_name.".`name` like '".$search_string."' or ".$this->table_name.".`name_guj` like '".$search_string."'");
 		}
 		if($order){
 			$this->db->order_by($order, 'Asc');
@@ -92,6 +106,9 @@ class Taluka_model extends CI_Model {
 		    $this->db->order_by('id', 'Asc');
 		}
 		$query = $this->db->get();
+//		echo "<pre>";
+//		print_r($this->db->last_query());
+//		echo "</pre>";
 		return $query->num_rows();        
     }
 
@@ -103,7 +120,7 @@ class Taluka_model extends CI_Model {
     function store_taluka($data)
     {
 		$insert = $this->db->insert($this->table_name, $data);
-	    return $insert;
+	    return $this->db->insert_id();
 	}
 
     /**

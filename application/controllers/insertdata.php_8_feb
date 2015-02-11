@@ -1,0 +1,124 @@
+<?php
+class insertdata extends CI_Controller {
+ 
+    /**
+    * Responsable for auto load the model
+    * @return void
+    */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('jilla_model');        
+		$this->load->model('common_model');
+		$this->load->model('taluka_model');        
+		$this->load->model('gaam_model');  
+		$this->load->model('aanganvadi_model');      
+		$this->load->model('kutumb_model');
+    }
+ 
+    /**
+    * Load the main view with all the current model model's data.
+    * @return void
+    */
+    public function index()
+    {
+     //   $getAllMember = $this->kutumb_model->set_all_pragnent_member();
+		//start inserting jilla
+		/*
+		$jilla = $this->jilla_model->get_jilla();  
+		for($i=0;$i<count($jilla);$i++)
+		{
+			$data_to_send = "id=".$jilla[$i]['id']."&guj_district_name=".$jilla[$i]['name_guj']."&district_name=".$jilla[$i]['name']."&status=1";
+			
+			$this->common_model->save_curl_data($data_to_send,'adddistrict.json');
+		}
+		//echo "<pre>";      
+		//print_r($jilla);
+		//echo "</pre>";
+		//end inserting jilla
+		
+		//start inserting taluka
+		$taluka = $this->taluka_model->get_taluka(); 
+		echo "<pre>";      
+		print_r($taluka);
+		echo "</pre>"; 
+		for($i=0;$i<count($taluka);$i++)
+		{
+			echo $data_to_send = "id=".$taluka[$i]['id']."&districts_id=".$taluka[$i]['jilla_id']."&guj_taluka_name=".$taluka[$i]['name_guj']."&taluka_name=".$taluka[$i]['name']."&status=1";
+			echo "<br>";
+			$this->common_model->save_curl_data($data_to_send,'addtaluka.json');
+		}
+		//end inserting taluka
+		
+		//start inserting gaam
+		$gaam = $this->gaam_model->get_gaam();
+		 
+		for($i=1300;$i<count($gaam);$i++)
+		{
+			echo $data_to_send = "id=".$gaam[$i]['id']."&talukas_id=".$gaam[$i]['taluka_id']."&guj_village_name=".$gaam[$i]['name_guj']."&village_name=".$gaam[$i]['name']."&status=1";
+			echo "<br><br>";
+			$this->common_model->save_curl_data($data_to_send,'addvillage.json');
+            echo "<br>";
+		}
+		//echo "<pre>";
+		//print_r($gaam);
+		//echo "</pre>";
+		//end inserting gaam
+         
+		
+		//start inserting aanganwadi
+		$aanganwadi = $this->aanganvadi_model->get_aanganvadi(); 
+		echo "<pre>";      
+		print_r($aanganwadi);
+		echo "</pre>"; 
+		for($i=0;$i<count($aanganwadi);$i++)
+		{
+			echo $data_to_send = "id=".$aanganwadi[$i]['id']."&villages_id=".$aanganwadi[$i]['gaam_id']."&guj_anganwadi_name=".$aanganwadi[$i]['aanganvadi_name']."&anganwadi_name=".$aanganwadi[$i]['aanganvadi_name']."&anganwadi_code=".$aanganwadi[$i]['aanganvadi_number']."&guj_worker_name=".$aanganwadi[$i]['karyakar_name']."&worker_name=".$aanganwadi[$i]['karyakar_name']."&worker_mobile=".$aanganwadi[$i]['karyakar_number']."&guj_helper_name=".$aanganwadi[$i]['tedagara_name']."&helper_name=".$aanganwadi[$i]['tedagara_name']."&helper_mobile=".$aanganwadi[$i]['tedagara_number']."&status=1";
+			echo "<br>";
+			$this->common_model->save_curl_data($data_to_send,'addanganwadi.json');
+		}
+		//end inserting aanganwadi
+         */
+		
+		//start inserting member
+		$kutumb = $this->kutumb_model->get_kutumb();
+        
+		 
+		for($i=100;$i<count($kutumb);$i++)
+		{
+			$members = $this->kutumb_model->get_all_person_by_kutumbid($kutumb[$i]['family_id']); 
+			
+			for($j=0;$j<count($members);$j++)
+			{
+				$gender='';
+                $gender='';
+                if($members[$j]['gender']==2)
+                    $gender='M';
+                if($members[$j]['gender']==3)
+                    $gender='F';
+                if($members[$j]['gender']==4)
+                    $gender='T';
+					
+				$birthdate='';
+				if($members[$j]['birth_date'] != '0000-00-00 00:00:00')
+					$birthdate = $members[$j]['birth_date'];
+                
+                $from = new DateTime($members[$j]['birth_date']);
+                $to   = new DateTime('today');
+                if($from->diff($to)->y <6)
+                {
+                echo $data_to_send = "id=".$members[$j]['family_person_id']."&anganwadies_id=".$kutumb[$i]['anganwadi_id']."&guj_first_name=".$members[$j]['first_name']."&first_name=".$members[$j]['first_name']."&guj_middle_name=".$members[$j]['middle_name']."&middle_name=".$members[$j]['middle_name']."&guj_last_name=".$members[$j]['last_name']."&last_name=".$members[$j]['last_name']."&sex=".$gender."&date_of_birth=".$birthdate."&parent_mobile=0&vaccinated=&vaccinated_date=&photo=&status=1";
+					echo "<br><br>";
+				//echo $data_to_send = "id=".$members[$j]['family_person_id']."&anganwadies_id=".$kutumb[$i]['anganwadi_id']."&guj_first_name=".$members[$j]['first_name']."&first_name=".$members[$j]['first_name']."&guj_middle_name=".$members[$j]['middle_name']."&middle_name=".$members[$j]['middle_name']."&guj_last_name=".$members[$j]['last_name']."&last_name=".$members[$j]['last_name']."&sex=".$gender."&date_of_birth=".$birthdate."&parent_mobile=&vaccinated=&vaccinated_date=&photo=&status=1";
+				$result = $this->common_model->save_curl_data($data_to_send,'addchildren.json');
+                }
+				//print_r($result);
+				//exit;
+			}
+		}
+		
+		//end inserting member
+		
+	}
+}
+?>

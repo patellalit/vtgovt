@@ -1,5 +1,8 @@
 @import url(bootstrap.css);
 @import url(admin.css);
+body{
+	font-family:'Arial';
+}
 .navbar-fixed-top .navbar-inner {
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.1) inset;
     padding: 10px 0;
@@ -34,11 +37,12 @@
 .navbar .nav  {
     background: none repeat scroll 0 0 #2c569e;
     width: 100%;
-	 border-radius: 5px;
+	border-radius: 5px;
+	margin:5px 10px 0 0;
 }
 .navbar .nav > li > a{
 	color:#fff;
-	font-size: medium;
+	font-size: 13px;
     font-weight: bold;
 }
 .form-signin{
@@ -52,4 +56,22 @@
 .login-right {
     float: left;
     width: 280px;
+}
+
+.page-header{
+	margin: 5px 0;
+	padding:0;
+	border:0;
+}
+.breadcrumb{
+	display:none;
+}
+.container.top{
+	margin-top: 0;
+}
+.navbar {
+    margin-bottom: 5px;
+}
+h2{
+	font-size:20px;
 }
