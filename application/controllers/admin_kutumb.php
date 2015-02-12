@@ -397,7 +397,7 @@ $_REQUEST['id'] = $this->input->post('aanganvadiid');
                                 $childcategory = '2';
                             }
                         }
-                        if($_REQUEST['familypersondata']->$i->lmp_date== "")
+                        if($_REQUEST['familypersondata']->$i->lmp_date!= "" && $_REQUEST['familypersondata']->$i->lmp_date!='0000-00-00')
                         {
                             $childcategory = '4';
                         }
@@ -439,6 +439,7 @@ $_REQUEST['id'] = $this->input->post('aanganvadiid');
 							'dilevery_type' => $_REQUEST['familypersondata']->$i->dilevery_type,
                             'childCategory' => $childcategory,
 						);
+                        $kutumb_person_id = $this->kutumb_model->store_kutumb_person($data_to_store);
 						//print_r($data_to_store);
 						$from = new DateTime($_REQUEST['familypersondata']->$i->txtBirthDate);
 						$to   = new DateTime('today');
@@ -452,7 +453,7 @@ $_REQUEST['id'] = $this->input->post('aanganvadiid');
 							if($_REQUEST['familypersondata']->$i->drpGender==4)
 								$gender='T';
 							//if the insert has returned true then we show the flash message
-							$kutumb_person_id = $this->kutumb_model->store_kutumb_person($data_to_store);
+							
 							$data_to_send = "id=".$kutumb_person_id."&anganwadies_id=".$this->input->post('aanganvadiid')."&guj_first_name=".$_REQUEST['familypersondata']->$i->txtfname."&first_name=".$_REQUEST['familypersondata']->$i->txtfname."&guj_middle_name=".$_REQUEST['familypersondata']->$i->txtmname."&middle_name=".$_REQUEST['familypersondata']->$i->txtmname."&guj_last_name=".$_REQUEST['familypersondata']->$i->txtlname."&last_name=".$_REQUEST['familypersondata']->$i->txtlname."&sex=".$gender."&date_of_birth=".$_REQUEST['familypersondata']->$i->txtBirthDate."&parent_mobile=0&vaccinated=&vaccinated_date=&photo=&status=1";
 							$this->common_model->save_curl_data($data_to_send,'addchildren.json');
 						}					
@@ -641,7 +642,7 @@ $_REQUEST['id'] = $this->input->post('aanganvadiid');
                                 $childcategory = '2';
                             }
                         }
-                        if($_REQUEST['familypersondata']->$i->lmp_date== "")
+                        if($_REQUEST['familypersondata']->$i->lmp_date!= "" && $_REQUEST['familypersondata']->$i->lmp_date!='0000-00-00')
                         {
                             $childcategory = '4';
                         }

@@ -520,7 +520,7 @@ class API_V1 extends CI_Controller {
                 $childcategory = '2';
             }
         }
-        if($familypersondata['lmp_date']== "")
+        if($familypersondata['lmp_date']!= "" && $familypersondata['lmp_date']!= "0000-00-00" )
         {
             $childcategory = '4';
         }

@@ -52,6 +52,7 @@ class Admin_jilla extends CI_Controller {
         $config['per_page'] = $perPage;
         $config['base_url'] = base_url().'jilla/page?'.http_build_query($_GET);
         $config['use_page_numbers'] = TRUE;
+        $config['page_query_string'] = TRUE;
         $config['num_links'] = 20;
         $config['full_tag_open'] = '<ul>';
         $config['full_tag_close'] = '</ul>';

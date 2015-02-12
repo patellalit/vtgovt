@@ -61,6 +61,7 @@ class Admin_aanganvadi extends CI_Controller {
         $config['per_page'] = $perPage;
         $config['base_url'] = base_url().'aanganvadi/page?'.http_build_query($_GET);
         $config['use_page_numbers'] = TRUE;
+        $config['page_query_string'] = TRUE;
         $config['num_links'] = 20;
         $config['full_tag_open'] = '<ul>';
         $config['full_tag_close'] = '</ul>';
@@ -399,12 +400,13 @@ $order='id';
 
         //aanganvadi data 
         $data['aanganvadi'] = $this->aanganvadi_model->get_aanganvadi_by_id($id);
+        //print_r($data['aanganvadi']);
          //fetch jilla data to populate the select field
         $data['jilla'] = $this->jilla_model->get_jilla();
 		//fetch taluka data to populate the select field
-        $data['taluka'] = $this->taluka_model->get_taluka();
+        $data['taluka'] = $this->taluka_model->get_taluka($data['aanganvadi'][0]['jilla_id']);
 		//fetch gaam data to populate the select field
-        $data['gaam'] = $this->gaam_model->get_gaam();
+        $data['gaam'] = $this->gaam_model->get_gaam($data['aanganvadi'][0]['taluka_id']);
         //load the view
         $data['main_content'] = 'admin/aanganvadi/edit';
         $this->load->view('includes/template', $data);            
