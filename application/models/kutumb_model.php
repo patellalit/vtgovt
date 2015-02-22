@@ -615,11 +615,33 @@ class Kutumb_model extends CI_Model {
         $this->db->from($this->table_name);
         if($type=="6to3")
         {
-            $this->db->join($this->person_table_name,$this->table_name.'.family_id='.$this->person_table_name.'.family_id AND ((12 * (YEAR(now()) - YEAR(birth_date)) + (MONTH(now()) - MONTH(birth_date))) > 6 and (12 * (YEAR(now()) - YEAR(birth_date)) + (MONTH(now()) - MONTH(birth_date)) <= 36)) ','inner');
+            //$this->db->join($this->person_table_name,$this->table_name.'.family_id='.$this->person_table_name.'.family_id AND ((12 * (YEAR(now()) - YEAR(birth_date)) + (MONTH(now()) - MONTH(birth_date))) > 6 and (12 * (YEAR(now()) - YEAR(birth_date)) + (MONTH(now()) - MONTH(birth_date)) <= 36)) ','inner');
+            /*
+             TIMESTAMPDIFF(MONTH, birth_date, NOW()) +
+             DATEDIFF(
+             NOW(),
+             birth_date + INTERVAL
+             TIMESTAMPDIFF(MONTH, birth_date, NOW())
+             MONTH
+             ) /
+             DATEDIFF(
+             birth_date + INTERVAL
+             TIMESTAMPDIFF(MONTH, birth_date, NOW()) + 1
+             MONTH,
+             birth_date + INTERVAL
+             TIMESTAMPDIFF(MONTH, birth_date, NOW())
+             MONTH
+             )
+             */
+            
+            $this->db->join($this->person_table_name,$this->table_name.'.family_id='.$this->person_table_name.'.family_id AND ((TIMESTAMPDIFF(MONTH, birth_date, NOW()) + DATEDIFF( NOW(), birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) MONTH ) / DATEDIFF( birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) + 1 MONTH, birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) MONTH)) > 6 and (TIMESTAMPDIFF(MONTH, birth_date, NOW()) + DATEDIFF( NOW(), birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) MONTH ) / DATEDIFF( birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) + 1 MONTH, birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) MONTH)) <= 36) ','inner');
+            //
         }
         else
         {
-            $this->db->join($this->person_table_name,$this->table_name.'.family_id='.$this->person_table_name.'.family_id AND ((12 * (YEAR(now()) - YEAR(birth_date)) + (MONTH(now()) - MONTH(birth_date))) > 36 and (12 * (YEAR(now()) - YEAR(birth_date)) + (MONTH(now()) - MONTH(birth_date)) <= 72)) ','inner');
+            //$this->db->join($this->person_table_name,$this->table_name.'.family_id='.$this->person_table_name.'.family_id AND ((12 * (YEAR(now()) - YEAR(birth_date)) + (MONTH(now()) - MONTH(birth_date))) > 36 and (12 * (YEAR(now()) - YEAR(birth_date)) + (MONTH(now()) - MONTH(birth_date)) <= 72)) ','inner');
+            
+            $this->db->join($this->person_table_name,$this->table_name.'.family_id='.$this->person_table_name.'.family_id AND ((TIMESTAMPDIFF(MONTH, birth_date, NOW()) + DATEDIFF( NOW(), birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) MONTH ) / DATEDIFF( birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) + 1 MONTH, birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) MONTH)) > 36 and (TIMESTAMPDIFF(MONTH, birth_date, NOW()) + DATEDIFF( NOW(), birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) MONTH ) / DATEDIFF( birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) + 1 MONTH, birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) MONTH)) <= 72) ','inner');
         }
 		
 		if($user_id)
@@ -687,6 +709,39 @@ class Kutumb_model extends CI_Model {
         return $result;
     }
     
-    
+    public function getTotalAttandenceOfMemberForDate($type,$aanganwadi_id,$date,$gendar,$lowlimit,$highlimit)
+    {
+        $this->db->select("family_person_id",false);
+        $this->db->from($this->person_table_name);
+        if($gendar!= 0)
+            $this->db->where("gender",$gendar);
+        $this->db->where("((TIMESTAMPDIFF(MONTH, birth_date, NOW()) + DATEDIFF( NOW(), birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) MONTH ) / DATEDIFF( birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) + 1 MONTH, birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) MONTH)) > ".$lowlimit." and (TIMESTAMPDIFF(MONTH, birth_date, NOW()) + DATEDIFF( NOW(), birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) MONTH ) / DATEDIFF( birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) + 1 MONTH, birth_date + INTERVAL TIMESTAMPDIFF(MONTH, birth_date, NOW()) MONTH)) <= ".$highlimit.")");
+        $this->db->join($this->table_name,$this->table_name.'.family_id='.$this->person_table_name.'.family_id AND '.$this->table_name.'.anganwadi_id ='.$aanganwadi_id,'inner');
+        
+        $query = $this->db->get();
+        
+        $result = $query->result_array();
+        $memberid=array();
+        foreach($result as $ids)
+        {
+            $memberid[] = $ids['family_person_id'];
+        }
+        if(!empty($memberid))
+        {
+        $this->db->select("count(*) as cnt",false);
+        $this->db->from('attendance_detail');
+        $this->db->where("member_id in (".implode(',',$memberid).")");
+        $this->db->where("attendance_date",$date);
+        
+        $query2 = $this->db->get();
+        
+        $result2 = $query2->result_array();
+        return $result2[0]['cnt'];
+        }
+        else
+        {
+            return 0;
+        }
+    }
 }
 ?>	

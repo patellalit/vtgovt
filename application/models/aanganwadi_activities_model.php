@@ -25,7 +25,20 @@ class aanganwadi_activities_model extends CI_Model {
 		$query = $this->db->get();
 		return $query->result_array(); 
     }    
-
+    /**
+     * Get product by his is
+     * @param int $product_id
+     * @return array
+     */
+    public function get_all_activities_by_aanganwadi_id($id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table_name);
+        $this->db->where('aanganvadi_id', $id);
+        
+        $query = $this->db->get();
+        return $query->result_array();
+    }
     /**
     * Store the new item into the database
     * @param array $data - associative array with data to store
@@ -65,6 +78,19 @@ class aanganwadi_activities_model extends CI_Model {
 		$this->db->where('aanganvadi_id', $id);
 		$this->db->delete($this->table_name); 
 	}
+    public function get_avtivity_done_in_date($activityid,$aanganwadi_id,$startdate,$enddate)
+    {
+        $this->db->select('count(*) as cnt');
+        $this->db->from($this->table_name);
+        $this->db->where('aanganvadi_id', $aanganwadi_id);
+        $this->db->where('FIND_IN_SET('.$activityid.',activity_id) !=0');
+        $this->db->where('date between \''.$startdate.'\' and \''.$enddate.'\'');
+        
+        $query = $this->db->get();
+        $rs = $query->result_array();
+        //print_r($this->db->last_query());
+        return $rs[0]['cnt'];
+    }
  
 }
 ?>	

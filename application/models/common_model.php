@@ -51,7 +51,7 @@ class Common_model extends CI_Model {
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
 		//curl_setopt($ch, CURLOPT_HTTPHEADER,array("Content-Type : text","Content-lenght:".strlen($data_string)));                                                                                                                                     
-		$result = curl_exec($ch);
+		//$result = curl_exec($ch);
 		//print_r($result);
 		return $result;
     }    

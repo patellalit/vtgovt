@@ -60,6 +60,9 @@
 				<li <?php if($this->uri->segment(2) == 'child_weight'){echo 'class="active"';}?>>
 					<a href="<?php echo base_url(); ?>child_weight">માત્રા</a>
 				</li>
+                <li <?php if($this->uri->segment(2) == 'report'){echo 'class="active"';}?>>
+                <a href="<?php echo base_url(); ?>reports">અહેવાલો</a>
+                </li>
                 <li <?php if($this->uri->segment(2) == 'logout'){echo 'class="active"';}?>>
                   <a href="<?php echo base_url(); ?>logout">લૉગઆઉટ</a>
                 </li>				

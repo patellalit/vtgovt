@@ -3,5 +3,5 @@
         <li class="active">માત્રા</li>
       </ul>
 	<div class="page-header users-header">
- <iframe src="http://lanover.com/lan/icds/" frameborder="0" width="100%" height="800"></iframe> 
+ <iframe src="<?php echo $iframe_url?>" frameborder="0" width="100%" height="800"></iframe> 
 </div>

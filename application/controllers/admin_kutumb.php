@@ -1037,8 +1037,20 @@ $_REQUEST['id'] = $this->input->post('aanganvadiid');
     }
 
 	public function child_weight(){
+		$data["iframe_url"] = "http://lanover.com/lan/icds/default/index/0/0/0/0";
+		
+		if(!$this->session->userdata('is_admin')){
+			$user_id = $this->session->userdata('user_id');
+			$aanganvadi = $this->aanganvadi_model->get_aanganvadi_by_id($user_id);
+			
+			if($aanganvadi && $aanganvadi[0] && $aanganvadi[0]["id"] > 0){
+				$data["iframe_url"] = "http://lanover.com/lan/icds/default/index/".$aanganvadi[0]["jilla_id"]."/".$aanganvadi[0]["taluka_id"]."/".$aanganvadi[0]["gaam_id"]."/".$aanganvadi[0]["id"]."";
+			}
+		}
+		
 		$data['main_content'] = 'admin/kutumb/child_weight';
-        $this->load->view('includes/template', $data);  	
+			
+		$this->load->view('includes/template', $data);
 	}
 
 }

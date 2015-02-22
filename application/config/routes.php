@@ -133,6 +133,13 @@ $route['item_stock/update'] = 'admin_item_stock/update';
 $route['item_stock/update/(:any)'] = 'admin_item_stock/update/$1';
 $route['item_stock/delete/(:any)'] = 'admin_item_stock/delete/$1';
 $route['item_stock/(:any)'] = 'admin_item_stock/index/$1'; //$1 = page number
+    
+$route['reports'] = 'admin_reports/index';
+$route['reports/downloadreports'] = 'admin_reports/downloadreports';
+$route['reports/update'] = 'admin_reports/update';
+$route['reports/update/(:any)'] = 'admin_reports/update/$1';
+$route['reports/delete/(:any)'] = 'admin_reports/delete/$1';
+$route['reports/(:any)'] = 'admin_reports/index/$1'; //$1 = page number
 
 
 /* End of file routes.php */

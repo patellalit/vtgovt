@@ -1,22 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en-US">
-<head>
-<meta charset="utf-8">
-<title>District Innovation Fund </title>
-
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-</head>
-<body>
-<style type="text/css">
-    body
-{
-    font-family: shree-guj-0768;
-src: url('http://localhost/vatsalya/assets/uploads/Shree768.ttf');
-}
-</style>
-        <div style="font-family:shree-guj-0768;">અહેવાલો નામ</div>
-</body>
-</html> -->
 <html>
     <head>
 <meta charset="utf-8">
@@ -38,100 +19,31 @@ table {
     </head>
     <body>
         <div id="printable" style="width:800px;margin:0 auto;">
-            <h1>વિભાગ 4 - પૂર્વ પ્રાથમિક ગતિવિધિઓનું પત્રક</h1>
+            <h1>વિભાગ ૧-અ: પૂર્વ પ્રાથમિક શિક્ષણ ની વિગત 3 થી 4 વર્ષ ની બધી કન્યાઓ માટે </h1>
             રેપોર્ત મહિનો/વર્ષ <?php echo date('m').'/'.date('Y') ?>
-            <table style="width:100%;">
+            <table style="width:100%;border:none">
                 <tr>
-<td style="border:none" cellspacing="0"  cellpadding="0">
-                        <table style="width:100%">
-                            <tr><td height="29.5">&nbsp;</td></tr>
-                            <tr><td height="29.5">A</td></tr>
-                            <tr><td height="<?php echo (count($activities))*29.5 ?>">&nbsp;</td></tr>
-                        </table>
-                    </td>
-                    <td style="border:none">
-                        <table style="width:100%">
-                            <tr>
-                                <td>તારીખ</td>
-                                <?php
-                                    for($i=1;$i<=11;$i++)
-                                    {
-                                        echo '<td>'.$i.'</td>';
-                                    }
-                                ?>
-                            </tr>
-                            <tr>
-                                <td>પૂર્વ પ્રાથમિક શિક્ષણ માટે કરાવેલ પ્રવૃત્તિ નું પત્રક</td>
-                                <td colspan="11"></td>
-                            </tr>
-                            <?php
-                                for($i=0;$i<count($activities);$i++)
-                                {
-                            ?>
-                                    <tr>
-                                        <td>
-                                            <?php echo $activities[$i]['name']; ?>
-                                        </td>
-                                        <?php
-                                            for($j=1;$j<=11;$j++)
-                                            {
-                                                ?>
-                                        <td>
-                                        <?php
-                                            if(!empty($activitiesservices[$j-1]))
-                                            {
-                                                if(in_array($activities[$i]['id'],$activitiesservices[$j-1]['activity_id']))
-                                                    echo 'હા';
-                                                else
-                                                    echo 'ના';
-                                                
-                                            }
-                                            else
-                                            {
-                                                echo 'ના';
-                                            }
-                                            ?>
-                                        <?php
-                                            }
-                                        ?>
-                                        </td>
-                                    </tr>
-                            <?php
-                                }
-                            ?>
-                                <tr>
-                                    <td>
-                                        દરેક દિવસે કરાવેલ કુલ પ્રવૃત્તિ ની સંખ્યા
-                                    </td>
-
-                                    <?php
-                                        for($j=1;$j<=11;$j++)
-                                        {
-                                    ?>
-                                            <td>
-                                            <?php
-                                                if(!empty($activitiesservices[$j-1]))
-                                                {
-                                                        echo count($activitiesservices[$j-1]['activity_id']);
-                                                    
-                                                }
-                                                else
-                                                {
-                                                    echo '0';
-                                                }
-                                                ?>
-                                            </td>
-
-                                    <?php
-                                        }
-                                    ?>
-                                </tr>
-                            </table>
-                            </td>
-                            </tr>
-                        </table>
-                    </td>
+                    <?php
+                        for($i=1;$i<=9;$i++)
+                        {
+                            echo '<td>'.$i.'</td>';
+                        }
+                    ?>
                 </tr>
+                <tr>
+                    <td style="width:5%">ક્રમ નંબર </td>
+                    <td style="width:5%">કુટુંબનો ક્રમ નંબર </td>
+                    <td style="width:10%">કુટુંબમાં વ્યક્તિનો ક્રમ નંબર </td>
+
+                    <td style="width:25%">નામ </td>
+                    <td style="width:10%">ઉમર </td>
+                    <td style="width:10%">જાતી</td>
+
+                    <td style="width:10%">રાજ્યમાં લઘુમતી છે <br>( હા / ના )</td>
+                    <td style="width:10%">વિકલાંગ <br>( હા / ના )</td>
+                    <td style="width:15%">સમગ્ર માસ દરમ્યાન પૂર્વ પ્રાથમિક શિક્ષણમાં હાજર કુલ દિવસ ની સંખ્યા </td>
+                </tr>
+
 
 
             </table>
@@ -154,15 +66,15 @@ table {
             <br><br>
             D. દરરોજ ની હાજર સંખ્યા
             <br><br>
-            <table style="width:100%" cellspacing="0"  cellpadding="0">
+            <table style="width:100%">
                 <tr>
-                    <td style="border:none">
+                    <td>
                         <table style="width:100%">
                             <tr><td height="29.5">&nbsp;</td></tr>
                             <tr><td height="88.5">કન્યાઓ</td></tr>
                         </table>
                     </td>
-                    <td style="border:none">
+                    <td>
                     <table style="width:100%">
                         <tr>
                             <td style="width:34%">તારીખ</td>
@@ -214,12 +126,12 @@ table {
                 </td>
             </tr>
             <tr>
-                <td  style="border:none">
+                <td>
                     <table style="width:100%">
                         <tr><td height="88.5">કુમારો</td></tr>
                     </table>
                 </td>
-                <td  style="border:none">
+                <td>
                 <table style="width:100%">
                     <tr>
                         <td style="width:34%">3-4 વર્ષ </td>
@@ -262,12 +174,12 @@ table {
             </td>
         </tr>
         <tr>
-            <td  style="border:none">
+            <td>
                 <table style="width:100%">
                     <tr><td height="88.5">બધા બાળકો </td></tr>
                 </table>
             </td>
-            <td  style="border:none">
+            <td>
                 <table style="width:100%">
                     <tr>
                         <td style="width:34%">3-4 વર્ષ </td>
@@ -367,7 +279,7 @@ table {
         <table style="width:100%">
 
             <tr>
-                <td  style="border:none">
+                <td>
                     <table style="width:100%">
                     <tr>
 
@@ -418,7 +330,7 @@ table {
             </td>
         </tr>
         <tr>
-            <td  style="border:none">
+            <td>
                 <table style="width:100%">
                     <tr>
 
@@ -464,7 +376,7 @@ table {
             </td>
         </tr>
         <tr>
-            <td  style="border:none">
+            <td>
                 <table style="width:100%">
                     <tr>
                         <?php

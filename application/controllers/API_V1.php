@@ -150,8 +150,13 @@ class API_V1 extends CI_Controller {
                 $gender='Transgender';
 			else
 				$gender='-';
-				
-			$vaccine['due_date'] = date('d-m-Y',strtotime($vaccine['due_date']));
+			if($vaccine['due_date'] && $vaccine['firstName'] != ""){
+				if(strtotime($vaccine['due_date']) >= strtotime("2014-11-01")){
+					$vaccine['due_date'] = date('d-m-Y',strtotime($vaccine['due_date']));
+				}else
+					continue;
+			}else
+					continue;
 				
 			$vaccinearray[] = array("personType"=>$vaccinetype,"vaccinationServerId"=>$vaccine['member_id'],"vaccinationId"=>$vaccine['vaccine_id'],"firstName"=>$vaccine['firstName'],"middleName"=>$vaccine['middleName'],"lastName"=>$vaccine['lastName'],"gender"=>$gender,"vaccineName"=>$vaccine['vaccineName'],"dueDate"=>$vaccine['due_date']);
 		}
@@ -985,6 +990,7 @@ class API_V1 extends CI_Controller {
                     {
                         //wheat for breakfast
                         $itemdetail=$this->item_model->get_item_by_name('Wheat');
+                        //print_r($itemdetail);
                         $stock = 10;
                         if($this->item_model->checkIfItemExists($itemdetail[0]['id'],$user_id,$stock))
                         {
@@ -1406,7 +1412,7 @@ class API_V1 extends CI_Controller {
     public function childrenweight()
     {
         $jsondata =json_decode($_REQUEST['data'],TRUE);
-        //print_r($jsondata);exit;
+        print_r($jsondata);
         
         
             if(count($jsondata['ChildrenWeightDetail']) > 0)
@@ -1436,6 +1442,7 @@ class API_V1 extends CI_Controller {
                                            'status'=>$status,
                                            'added_date' => date('Y-m-d H:i:s')
                                            );
+print_r($data_to_store);
                     $id=$this->kutumb_model->store_weight($data_to_store);
                     
                 }
