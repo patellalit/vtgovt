@@ -1412,7 +1412,7 @@ class API_V1 extends CI_Controller {
     public function childrenweight()
     {
         $jsondata =json_decode($_REQUEST['data'],TRUE);
-        print_r($jsondata);
+        
         
         
             if(count($jsondata['ChildrenWeightDetail']) > 0)
@@ -1442,7 +1442,7 @@ class API_V1 extends CI_Controller {
                                            'status'=>$status,
                                            'added_date' => date('Y-m-d H:i:s')
                                            );
-print_r($data_to_store);
+
                     $id=$this->kutumb_model->store_weight($data_to_store);
                     
                 }
